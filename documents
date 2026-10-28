@@ -1,0 +1,438 @@
+ARTIFICIAL INTELLIGENCE
+What is Artificial Intelligence?
+It is a branch of Computer Science that pursues creating the computers or machines as intelligent
+as human beings.
+It is the science and engineering of making intelligent machines, especially intelligent computer
+programs.
+It is related to the similar task of using computers to understand human intelligence, but AI does
+not have to confine itself to methods that are biologically observable
+Definition: Artificial Intelligence is the study of how to make computers do things, which, at the
+moment, people do better.
+According to the father of Artificial Intelligence, John McCarthy, it is “The science and
+engineering of making intelligent machines, especially intelligent computer programs”.
+Artificial Intelligence is a way of making a computer, a computer-controlled robot, or a
+software think intelligently, in the similar manner the intelligent humans think.
+AI is accomplished by studying how human brain thinks and how humans learn, decide, and
+work while trying to solve a problem, and then using the outcomes of this study as a basis of
+developing intelligent software and systems.
+It has gained prominence recently due, in part, to big data, or the increase in speed, size and
+variety of data businesses are now collecting. AI can perform tasks such as identifying patterns
+in the data more efficiently than humans, enabling businesses to gain more insight out of
+their data.
+From a business perspective AI is a set of very powerful tools, and methodologies for using
+those tools to solve business problems.
+From a programming perspective, AI includes the study of symbolic programming, problem
+solving, and search.
+AI Vocabulary
+Intelligence relates to tasks involving higher mental processes, e.g. creativity, solving problems,
+pattern recognition, classification, learning, induction, deduction, building analogies,
+optimization, language processing, knowledge and many more. Intelligence is the computational
+part of the ability to achieve goals.
+Intelligent behaviour is depicted by perceiving one’s environment, acting in complex
+environments, learning and understanding from experience, reasoning to solve problems and
+discover hidden knowledge, applying knowledge successfully in new situations, thinking
+abstractly, using analogies, communicating with others and more.
+Science based goals of AI pertain to developing concepts, mechanisms and understanding
+biological intelligent behaviour. The emphasis is on understanding intelligent behaviour.
+Engineering based goals of AI relate to developing concepts, theory and practice of building
+intelligent machines. The emphasis is on system building.
+AI Techniques depict how we represent, manipulate and reason with knowledge in order to
+solve problems. Knowledge is a collection of ‘facts’. To manipulate these facts by a program, a
+suitable representation is required. A good representation facilitates problem solving.
+Learning means that programs learn from what facts or behaviour can represent. Learning
+denotes changes in the systems that are adaptive in other words, it enables the system to do the
+same task(s) more efficiently next time.
+Applications of AI refers to problem solving, search and control strategies, speech recognition,
+natural language understanding, computer vision, expert systems, etc.
+Problems of AI:
+Intelligence does not imply perfect understanding; every intelligent being has limited perception,
+memory and computation. Many points on the spectrum of intelligence versus cost are viable,
+from insects to humans. AI seeks to understand the computations required from intelligent
+behaviour and to produce computer systems that exhibit intelligence. Aspects of intelligence
+studied by AI include perception, communicational using human languages, reasoning, planning,
+learning and memory.
+  
+The following questions are to be considered before we can step forward:
+1. What are the underlying assumptions about intelligence?
+2. What kinds of techniques will be useful for solving AI problems?
+3. At what level human intelligence can be modelled?
+4. When will it be realized when an intelligent program has been built?
+  
+Branches of AI:
+A list of branches of AI is given below. However some branches are surely missing, because no
+one has identified them yet. Some of these may be regarded as concepts or topics rather than full
+branches.
+Logical AI — In general the facts of the specific situation in which it must act, and its goals are
+all represented by sentences of some mathematical logical language. The program decides what
+to do by inferring that certain actions are appropriate for achieving its goals.
+Search — Artificial Intelligence programs often examine large numbers of possibilities – for
+example, moves in a chess game and inferences by a theorem proving program. Discoveries are
+frequently made about how to do this more efficiently in various domains.
+Pattern Recognition — When a program makes observations of some kind, it is often planned
+to compare what it sees with a pattern. For example, a vision program may try to match a pattern
+of eyes and a nose in a scene in order to find a face. More complex patterns are like a natural
+language text, a chess position or in the history of some event. These more complex patterns
+require quite different methods than do the simple patterns that have been studied the most.
+Representation — Usually languages of mathematical logic are used to represent the facts about
+the world.
+Inference — Others can be inferred from some facts. Mathematical logical deduction is
+sufficient for some purposes, but new methods of non-monotonic inference have been added to
+the logic since the 1970s. The simplest kind of non-monotonic reasoning is default reasoning in
+which a conclusion is to be inferred by default. But the conclusion can be withdrawn if there is
+evidence to the divergent. For example, when we hear of a bird, we infer that it can fly, but this
+conclusion can be reversed when we hear that it is a penguin. It is the possibility that a
+conclusion may have to be withdrawn that constitutes the non-monotonic character of the
+reasoning. Normal logical reasoning is monotonic, in that the set of conclusions can be drawn
+from a set of premises, i.e. monotonic increasing function of the premises. Circumscription is
+another form of non-monotonic reasoning.
+Common sense knowledge and Reasoning — This is the area in which AI is farthest from the
+human level, in spite of the fact that it has been an active research area since the 1950s. While
+there has been considerable progress in developing systems of non-monotonic reasoning and
+theories of action, yet more new ideas are needed.
+Learning from experience — There are some rules expressed in logic for learning. Programs
+can only learn what facts or behaviour their formalisms can represent, and unfortunately learning
+systems are almost all based on very limited abilities to represent information.
+Planning — Planning starts with general facts about the world (especially facts about the effects
+of actions), facts about the particular situation and a statement of a goal. From these, planning
+programs generate a strategy for achieving the goal. In the most common cases, the strategy is
+just a sequence of actions.
+Epistemology — This is a study of the kinds of knowledge that are required for solving
+problems in the world.
+Ontology — Ontology is the study of the kinds of things that exist. In AI the programs and
+sentences deal with various kinds of objects and we study what these kinds are and what their
+basic properties are. Ontology assumed importance from the 1990s.
+Heuristics — A heuristic is a way of trying to discover something or an idea embedded in a
+program. The term is used variously in AI. Heuristic functions are used in some approaches to
+search or to measure how far a node in a search tree seems to be from a goal. Heuristic
+predicates that compare two nodes in a search tree to see if one is better than the other, i.e.
+constitutes an advance toward the goal, and may be more useful.
+Genetic programming — Genetic programming is an automated method for creating a working
+computer program from a high-level problem statement of a problem. Genetic programming
+starts from a high-level statement of ‘what needs to be done’ and automatically creates a
+computer program to solve the problem.
+Applications of AI
+AI has applications in all fields of human study, such as finance and economics, environmental
+engineering, chemistry, computer science, and so on. Some of the applications of AI are listed
+below:
+ Perception
+■ Machine vision
+■ Speech understanding
+■ Touch ( tactile or haptic) sensation
+ Robotics
+ Natural Language Processing
+■ Natural Language Understanding
+■ Speech Understanding
+■ Language Generation
+■ Machine Translation
+ Planning
+ Expert Systems
+ Machine Learning
+ Theorem Proving
+ Symbolic Mathematics
+ Game Playing
+AI Technique:
+Artificial Intelligence research during the last three decades has concluded that Intelligence
+requires knowledge. To compensate overwhelming quality, knowledge possesses less desirable
+properties.
+A. It is huge.
+B. It is difficult to characterize correctly.
+C. It is constantly varying.
+D. It differs from data by being organized in a way that corresponds to its application.
+E. It is complicated.
+An AI technique is a method that exploits knowledge that is represented so that:
+ The knowledge captures generalizations that share properties, are grouped
+together, rather than being allowed separate representation.
+ It can be understood by people who must provide it—even though for many
+programs bulk of the data comes automatically from readings.
+ In many AI domains, how the people understand the same people must supply the
+knowledge to a program.
+ It can be easily modified to correct errors and reflect changes in real conditions.
+ It can be widely used even if it is incomplete or inaccurate.
+ It can be used to help overcome its own sheer bulk by helping to narrow the range
+of possibilities that must be usually considered.
+In order to characterize an AI technique let us consider initially OXO or tic-tac-toe and use a
+series of different approaches to play the game.
+The programs increase in complexity, their use of generalizations, the clarity of their
+knowledge and the extensibility of their approach. In this way they move towards being
+representations of AI techniques.
+  
+Example-1: Tic-Tac-Toe
+1.1 The first approach (simple)
+The Tic-Tac-Toe game consists of a nine element vector called BOARD; it represents the
+numbers 1 to 9 in three rows.
+An element contains the value 0 for blank, 1 for X and 2 for O. A MOVETABLE vector consists
+of 19,683 elements (39) and is needed where each element is a nine element vector. The contents
+of the vector are especially chosen to help the algorithm.
+  
+The algorithm makes moves by pursuing the following:
+1. View the vector as a ternary number. Convert it to a decimal number.
+2. Use the decimal number as an index in MOVETABLE and access the vector.
+3. Set BOARD to this vector indicating how the board looks after the move. This approach is
+capable in time but it has several disadvantages. It takes more space and requires stunning
+effort to calculate the decimal numbers. This method is specific to this game and cannot be
+completed.
+  
+1.2 The second approach
+The structure of the data is as before but we use 2 for a blank, 3 for an X and 5 for an O.
+A variable called TURN indicates 1 for the first move and 9 for the last. The algorithm consists
+of three actions:
+MAKE2 which returns 5 if the centre square is blank; otherwise it returns any blank noncorner
+square, i.e. 2, 4, 6 or 8. POSSWIN (p) returns 0 if player p cannot win on the next move
+and otherwise returns the number of the square that gives a winning move.
+It checks each line using products 3*3*2 = 18 gives a win for X, 5*5*2=50 gives a win
+for O, and the winning move is the holder of the blank. GO (n) makes a move to square n setting
+BOARD[n] to 3 or 5.
+This algorithm is more involved and takes longer but it is more efficient in storage which
+compensates for its longer time. It depends on the programmer’s skill.
+  
+1.3 The final approach
+The structure of the data consists of BOARD which contains a nine element vector, a list of
+board positions that could result from the next move and a number representing an estimation of how
+the board position leads to an ultimate win for the player to move.
+This algorithm looks ahead to make a decision on the next move by deciding which the most
+promising move or the most suitable move at any stage would be and selects the same.
+Consider all possible moves and replies that the program can make. Continue this process for
+as long as time permits until a winner emerges, and then choose the move that leads to the computer
+program winning, if possible in the shortest time.
+Actually this is most difficult to program by a good limit but it is as far that the technique can
+be extended to in any game. This method makes relatively fewer loads on the programmer in terms
+of the game technique but the overall game strategy must be known to the adviser.
+  
+Example-2: Question Answering
+Let us consider Question Answering systems that accept input in English and provide
+answers also in English. This problem is harder than the previous one as it is more difficult to
+specify the problem properly. Another area of difficulty concerns deciding whether the answer
+obtained is correct, or not, and further what is meant by ‘correct’. For example, consider the
+following situation:
+2.1 Text
+Rani went shopping for a new Coat. She found a red one she really liked.
+When she got home, she found that it went perfectly with her favourite dress.
+  
+2.2 Question
+1. What did Rani go shopping for?
+2. What did Rani find that she liked?
+3. Did Rani buy anything?
+  
+Method 1
+  2.3 Data Structures
+  A set of templates that match common questions and produce patterns used to match
+against inputs. Templates and patterns are used so that a template that matches a given question
+is associated with the corresponding pattern to find the answer in the input text. For example, the
+template who did x y generates x y z if a match occurs and z is the answer to the question. The
+given text and the question are both stored as strings.
+  
+2.4 Algorithm
+Answering a question requires the following four steps to be followed:
+ Compare the template against the questions and store all successful matches to produce a
+set of text patterns.
+ Pass these text patterns through a substitution process to change the person or voice and
+produce an expanded set of text patterns.
+ Apply each of these patterns to the text; collect all the answers and then print the
+answers.
+  
+2.5 Example
+In question 1 we use the template WHAT DID X Y which generates Rani go shopping for z and
+after substitution we get Rani goes shopping for z and Rani went shopping for z giving z
+[equivalence] a new coat
+In question 2 we need a very large number of templates and also a scheme to allow the insertion
+of ‘find’ before ‘that she liked’; the insertion of ‘really’ in the text; and the substitution of ‘she’
+for ‘Rani’ gives the answer ‘a red one’.
+Question 3 cannot be answered.
+  
+2.6 Comments
+This is a very primitive approach basically not matching the criteria we set for
+intelligence and worse than that, used in the game. Surprisingly this type of technique was
+actually used in ELIZA which will be considered later in the course.
+  
+Method 2
+2.7 Data Structures
+A structure called English consists of a dictionary, grammar and some semantics about
+the vocabulary we are likely to come across. This data structure provides the knowledge to
+convert English text into a storable internal form and also to convert the response back into
+English. The structured representation of the text is a processed form and defines the context of
+the input text by making explicit all references such as pronouns. There are three types of such
+knowledge representation systems: production rules of the form ‘if x then y’, slot and filler
+systems and statements in mathematical logic. The system used here will be the slot and filler
+system.
+Take, for example sentence:
+‘She found a red one she really liked’.
+Event2 Event2
+instance: finding instance: liking
+tense: past tense: past
+agent: Rani modifier: much
+object: Thing1 object: Thing1
+Thing1
+instance: coat
+colour: red
+The question is stored in two forms: as input and in the above form.
+  
+2.8 Algorithm
+ Convert the question to a structured form using English know how, then use a marker to
+indicate the substring (like ‘who’ or ‘what’) of the structure, that should be returned as an
+answer. If a slot and filler system is used a special marker can be placed in more than one
+slot.
+ The answer appears by matching this structured form against the structured text.
+ The structured form is matched against the text and the requested segments of the
+question are returned.
+  
+2.9 Examples
+Both questions 1 and 2 generate answers via a new coat and a red coat respectively.
+Question 3 cannot be answered, because there is no direct response.
+  
+2.10 Comments
+This approach is more meaningful than the previous one and so is more effective. The
+extra power given must be paid for by additional search time in the knowledge bases. A warning
+must be given here: that is – to generate unambiguous English knowledge base is a complex task
+and must be left until later in the course. The problems of handling pronouns are difficult.
+For example:
+Rani walked up to the salesperson: she asked where the toy department was.
+Rani walked up to the salesperson: she asked her if she needed any help.
+Whereas in the original text the linkage of ‘she’ to ‘Rani’ is easy, linkage of ‘she’ in each of the
+above sentences to Rani and to the salesperson requires additional knowledge about the context
+via the people in a shop.
+  
+Method 3
+2.11 Data Structures
+World model contains knowledge about objects, actions and situations that are described
+in the input text. This structure is used to create integrated text from input text. The diagram
+shows how the system’s knowledge of shopping might be represented and stored. This
+information is known as a script and in this case is a shopping script. (See figure 1.1 next page )
+  
+1.8.2.12 Algorithm
+Convert the question to a structured form using both the knowledge contained in Method
+2 and the World model, generating even more possible structures, since even more knowledge is
+being used. Sometimes filters are introduced to prune the possible answers.
+To answer a question, the scheme followed is: Convert the question to a structured form
+as before but use the world model to resolve any ambiguities that may occur. The structured
+form is matched against the text and the requested segments of the question are returned.
+  
+2.13 Example
+Both questions 1 and 2 generate answers, as in the previous program. Question 3 can now
+be answered. The shopping script is instantiated and from the last sentence the path through step
+14 is the one used to form the representation. ‘M’ is bound to the red coat-got home. ‘Rani buys
+a red coat’ comes from step 10 and the integrated text generates that she bought a red coat.
+  
+2.14 Comments
+This program is more powerful than both the previous programs because it has more
+knowledge. Thus, like the last game program it is exploiting AI techniques. However, we are not
+yet in a position to handle any English question. The major omission is that of a general
+reasoning mechanism known as inference to be used when the required answer is not explicitly
+given in the input text. But this approach can handle, with some modifications, questions of the
+following form with the answer—Saturday morning Rani went shopping. Her brother tried to
+call her but she did not answer.
+Question: Why couldn’t Rani’s brother reach her?
+Answer: Because she was not in.
+This answer is derived because we have supplied an additional fact that a person cannot
+be in two places at once. This patch is not sufficiently general so as to work in all cases and does
+not provide the type of solution we are really looking for.
+LEVEL OF THE AI MODEL
+‘What is our goal in trying to produce programs that do the intelligent things that people do?’
+Are we trying to produce programs that do the tasks the same way that people do?
+OR
+Are we trying to produce programs that simply do the tasks the easiest way that is
+possible?
+Programs in the first class attempt to solve problems that a computer can easily solve and
+do not usually use AI techniques. AI techniques usually include a search, as no direct method is
+available, the use of knowledge about the objects involved in the problem area and abstraction on
+which allows an element of pruning to occur, and to enable a solution to be found in real time;
+otherwise, the data could explode in size. Examples of these trivial problems in the first class,
+which are now of interest only to psychologists are EPAM (Elementary Perceiver and
+Memorizer) which memorized garbage syllables.
+The second class of problems attempts to solve problems that are non-trivial for a computer and
+use AI techniques. We wish to model human performance on these:
+  
+1. To test psychological theories of human performance. Ex. PARRY [Colby, 1975] – a
+program to simulate the conversational behavior of a paranoid person.
+2. To enable computers to understand human reasoning – for example, programs that
+answer questions based upon newspaper articles indicating human behavior.
+3. To enable people to understand computer reasoning. Some people are reluctant to accept
+computer results unless they understand the mechanisms involved in arriving at the
+results.
+4. To exploit the knowledge gained by people who are best at gathering information. This
+persuaded the earlier workers to simulate human behavior in the SB part of AISB
+simulated behavior. Examples of this type of approach led to GPS (General Problem
+Solver).
+  
+Questions for Practice:
+1. What is intelligence? How do we measure it? Are these measurements useful?
+2. When the temperature falls and the thermostat turns the heater on, does it act because it
+believes the room to be too cold? Does it feel cold? What sorts of things can have beliefs
+or feelings? Is this related to the idea of consciousness?
+3. Some people believe that the relationship between your mind (a non-physical thing) and
+your brain (the physical thing inside your skull) is exactly like the relationship between a
+computational process (a non-physical thing) and a physical computer. Do you agree?
+4. How good are machines at playing chess? If a machine can consistently beat all the best
+human chess players, does this prove that the machine is intelligent?
+5. What is AI Technique? Explain Tic-Tac-Toe Problem using AI Technique.
+PROBLEMS, PROBLEM SPACES AND SEARCH
+  
+To solve the problem of building a system you should take the following steps:
+1. Define the problem accurately including detailed specifications and what constitutes a
+suitable solution.
+2. Scrutinize the problem carefully, for some features may have a central affect on the
+chosen method of solution.
+3. Segregate and represent the background knowledge needed in the solution of the
+problem.
+4. Choose the best solving techniques for the problem to solve a solution.
+Problem solving is a process of generating solutions from observed data.
+• a ‘problem’ is characterized by a set of goals,
+• a set of objects, and
+• a set of operations.
+These could be ill-defined and may evolve during problem solving.
+• A ‘problem space’ is an abstract space.
+ A problem space encompasses all valid states that can be generated by the
+application of any combination of operators on any combination of objects.
+ The problem space may contain one or more solutions. A solution is a
+combination of operations and objects that achieve the goals.
+• A ‘search’ refers to the search for a solution in a problem space.
+ Search proceeds with different types of ‘search control strategies’.
+ The depth-first search and breadth-first search are the two common search
+strategies.
+  
+2.1 AI - General Problem Solving
+Problem solving has been the key area of concern for Artificial Intelligence.
+Problem solving is a process of generating solutions from observed or given data. It is however
+not always possible to use direct methods (i.e. go directly from data to solution). Instead,
+problem solving often needs to use indirect or modelbased methods.
+General Problem Solver (GPS) was a computer program created in 1957 by Simon and Newell
+to build a universal problem solver machine. GPS was based on Simon and Newell’s theoretical
+work on logic machines. GPS in principle can solve any formalized symbolic problem, such as
+theorems proof and geometric problems and chess playing. GPS solved many simple problems,
+such as the Towers of Hanoi, that could be sufficiently formalized, but GPS could not solve any
+real-world problems.
+To build a system to solve a particular problem, we need to:
+ Define the problem precisely – find input situations as well as final situations for an
+acceptable solution to the problem
+ Analyze the problem – find few important features that may have impact on the
+appropriateness of various possible techniques for solving the problem
+ Isolate and represent task knowledge necessary to solve the problem
+ Choose the best problem-solving technique(s) and apply to the particular problem
+Problem definitions
+A problem is defined by its ‘elements’ and their ‘relations’. To provide a formal description of a
+problem, we need to do the following:
+a. Define a state space that contains all the possible configurations of the relevant objects,
+including some impossible ones.
+b. Specify one or more states that describe possible situations, from which the problemsolving
+process may start. These states are called initial states.
+c. Specify one or more states that would be acceptable solution to the problem.
+These states are called goal states.
+Specify a set of rules that describe the actions (operators) available.
+The problem can then be solved by using the rules, in combination with an appropriate control
+strategy, to move through the problem space until a path from an initial state to a goal state is
+found. This process is known as ‘search’. Thus:
+ Search is fundamental to the problem-solving process.
+ Search is a general mechanism that can be used when a more direct
+method is not known.
+ Search provides the framework into which more direct methods for
+solving subparts of a problem can be embedded. A very large number of
+AI problems are formulated as search problems.
+ Problem space
+A problem space is represented by a directed graph, where nodes represent search state and paths
+represent the operators applied to change the state.
+To simplify search algorithms, it is often convenient to logically and programmatically represent
+a problem space as a tree. A tree usually decreases the complexity of a search at a cost. Here, the
+cost is due to duplicating some nodes on the tree that were linked numerous times in the graph,
+e.g. node B and node D.
+A tree is a graph in which any two vertices are connected by exactly one path. Alternatively, any
+connected graph with no cycles is a tree.
+•
