@@ -1,3 +1,4 @@
+streamlit python-dotenv pypdf langchain-core langchain-text-splitters langchain-huggingface langchain-chroma langchain-google-genai -q
 
 import os
 from io import BytesIO
