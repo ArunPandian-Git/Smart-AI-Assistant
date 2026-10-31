@@ -1,6 +1,5 @@
 import pandas as pd
 import streamlit as st
-import plotly.express as px
 
 from sklearn.linear_model import LinearRegression
 from sklearn.metrics import mean_absolute_error, r2_score
