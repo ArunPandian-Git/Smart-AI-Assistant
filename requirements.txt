@@ -5,3 +5,7 @@ plotly
 scikit-learn
 matplotlib
 seaborn
+openpyxl
+joblib
+groq
+python-dotenv
