@@ -1,153 +1,268 @@
-import pandas as pd
 import streamlit as st
+import pandas as pd
 import plotly.express as px
 
 from pathlib import Path
-from sklearn.linear_model import LinearRegression
-from sklearn.metrics import mean_absolute_error, r2_score
 
-st.subheader("SmartSales AI - Sales Prediction")
+# Page configuration
+st.set_page_config(
+    page_title="Smart AI Assistant",
+    page_icon="🤖",
+    layout="wide"
+)
 
-try:
+# Custom CSS
+st.markdown("""
+<style>
 
-    # 1. Load dataset
-    file_path = Path("data/daily_sales.csv")
+.stApp {
+    background-color: #0E1117;
+    color: white;
+}
 
-    if not file_path.exists():
-        st.error("Sales dataset not found: data/daily_sales.csv")
+[data-testid="stSidebar"] {
+    background-color: #161B26;
+}
+
+.metric-card {
+    background-color: #1C2535;
+    padding: 20px;
+    border-radius: 12px;
+    border: 1px solid #303B50;
+}
+
+</style>
+""", unsafe_allow_html=True)
+
+
+# Application title
+st.title("🤖 Smart AI Assistant")
+
+st.markdown(
+    "### Intelligent Sales Analytics & Prediction Platform"
+)
+
+st.write("---")
+
+
+# Sidebar
+st.sidebar.title("SMART AI")
+
+page = st.sidebar.radio(
+    "Navigation",
+    [
+        "Dashboard",
+        "Sales Analytics",
+        "Product Analysis",
+        "Regional Analysis",
+        "Sales Prediction",
+        "AI Assistant",
+        "Business Insights",
+        "Data Explorer"
+    ]
+)
+
+
+# Upload dataset
+uploaded_file = st.sidebar.file_uploader(
+    "Upload Sales Dataset",
+    type=["csv", "xlsx"]
+)
+
+
+# Load dataset
+if uploaded_file is not None:
+
+    if uploaded_file.name.endswith(".csv"):
+        df = pd.read_csv(uploaded_file)
+    else:
+        df = pd.read_excel(uploaded_file)
+
+else:
+
+    file_path = Path("data/sales.csv")
+
+    if file_path.exists():
+        df = pd.read_csv(file_path)
+    else:
+        st.warning("Please upload a sales dataset.")
         st.stop()
 
-    df = pd.read_csv(file_path)
 
-    # 2. Validate columns
-    required_columns = ["Date", "Revenue"]
+# Convert date
+df["Date"] = pd.to_datetime(df["Date"])
 
-    if not all(col in df.columns for col in required_columns):
-        st.error("Dataset must contain Date and Revenue columns.")
-        st.stop()
+# Dashboard
+if page == "Dashboard":
 
-    # 3. Preprocessing
-    df["Date"] = pd.to_datetime(df["Date"], errors="coerce")
-    df["Revenue"] = pd.to_numeric(df["Revenue"], errors="coerce")
+    st.subheader("Business Performance Overview")
 
-    df = df.dropna(subset=["Date", "Revenue"])
+    col1, col2, col3, col4 = st.columns(4)
 
-    df = df.sort_values("Date").reset_index(drop=True)
+    with col1:
+        st.metric(
+            "Total Revenue",
+            f"₹{df['Revenue'].sum():,.0f}"
+        )
 
-    if len(df) < 10:
-        st.error("At least 10 valid records are required.")
-        st.stop()
+    with col2:
+        st.metric(
+            "Total Orders",
+            f"{df['Order_ID'].nunique():,}"
+        )
 
-    # 4. Feature Engineering
-    df["DayNumber"] = (
-        df["Date"] - df["Date"].min()
-    ).dt.days
+    with col3:
+        st.metric(
+            "Total Profit",
+            f"₹{df['Profit'].sum():,.0f}"
+        )
 
-    df["DayOfWeek"] = df["Date"].dt.dayofweek
+    with col4:
+        st.metric(
+            "Total Products",
+            f"{df['Product'].nunique():,}"
+        )
 
-    features = ["DayNumber", "DayOfWeek"]
+    st.write("---")
 
-    X = df[features]
-    y = df["Revenue"]
+    # Revenue chart
+    monthly_sales = (
+        df.groupby(df["Date"].dt.to_period("M"))["Revenue"]
+        .sum()
+        .reset_index()
+    )
 
-    # 5. Chronological Train-Test Split
-    split_index = int(len(df) * 0.8)
+    monthly_sales["Date"] = (
+        monthly_sales["Date"].astype(str)
+    )
 
-    X_train = X.iloc[:split_index]
-    X_test = X.iloc[split_index:]
-
-    y_train = y.iloc[:split_index]
-    y_test = y.iloc[split_index:]
-
-    # 6. Model Training
-    model = LinearRegression()
-
-    model.fit(X_train, y_train)
-
-    # 7. Prediction
-    y_pred = model.predict(X_test)
-
-    # 8. Evaluation
-    mae = mean_absolute_error(y_test, y_pred)
-
-    r2 = r2_score(y_test, y_pred)
-
-    col1, col2 = st.columns(2)
-
-    col1.metric("Test MAE", f"₹{mae:,.2f}")
-
-    col2.metric("Test R²", f"{r2:.3f}")
-
-    # 9. Actual vs Predicted
-    comparison = pd.DataFrame({
-        "Date": df["Date"].iloc[split_index:],
-        "Actual Revenue": y_test.values,
-        "Predicted Revenue": y_pred
-    })
-
-    fig1 = px.line(
-        comparison,
+    fig = px.line(
+        monthly_sales,
         x="Date",
-        y=["Actual Revenue", "Predicted Revenue"],
-        title="Actual vs Predicted Sales"
+        y="Revenue",
+        title="Monthly Revenue Trend",
+        markers=True
     )
 
-    st.plotly_chart(fig1, use_container_width=True)
-
-    # 10. Future Forecast
-    st.subheader("Future Sales Forecast")
-
-    days = st.slider(
-        "Select Forecast Days",
-        min_value=1,
-        max_value=30,
-        value=7
-    )
-
-    last_date = df["Date"].max()
-
-    future_dates = pd.date_range(
-        start=last_date + pd.Timedelta(days=1),
-        periods=days,
-        freq="D"
-    )
-
-    future_df = pd.DataFrame({
-        "Date": future_dates
-    })
-
-    future_df["DayNumber"] = (
-        future_df["Date"] - df["Date"].min()
-    ).dt.days
-
-    future_df["DayOfWeek"] = (
-        future_df["Date"].dt.dayofweek
-    )
-
-    future_df["PredictedRevenue"] = model.predict(
-        future_df[features]
-    )
-
-    # 11. Display Results
-    st.dataframe(
-        future_df,
+    st.plotly_chart(
+        fig,
         use_container_width=True
     )
 
-    # 12. Forecast Graph
-    fig2 = px.line(
-        future_df,
-        x="Date",
-        y="PredictedRevenue",
-        markers=True,
-        title="Future Daily Revenue Prediction"
+    # Product chart
+    product_sales = (
+        df.groupby("Product")["Revenue"]
+        .sum()
+        .reset_index()
     )
 
-    st.plotly_chart(fig2, use_container_width=True)
+    fig2 = px.bar(
+        product_sales,
+        x="Product",
+        y="Revenue",
+        title="Product Performance"
+    )
 
-    st.success("Sales prediction completed successfully!")
+    st.plotly_chart(
+        fig2,
+        use_container_width=True
+    )
 
-except Exception as e:
 
-    st.error(f"Application Error: {e}")
+# Sales Analytics
+elif page == "Sales Analytics":
 
+    st.header("📊 Sales Analytics")
+
+    st.dataframe(
+        df,
+        use_container_width=True
+    )
+
+
+# Product Analysis
+elif page == "Product Analysis":
+
+    st.header("📦 Product Analysis")
+
+    result = df.groupby(
+        "Product"
+    )["Revenue"].sum().reset_index()
+
+    st.bar_chart(
+        result,
+        x="Product",
+        y="Revenue"
+    )
+
+
+# Regional Analysis
+elif page == "Regional Analysis":
+
+    st.header("🌍 Regional Analysis")
+
+    result = df.groupby(
+        "Region"
+    )["Revenue"].sum().reset_index()
+
+    st.bar_chart(
+        result,
+        x="Region",
+        y="Revenue"
+    )
+
+
+# Sales Prediction
+elif page == "Sales Prediction":
+
+    st.header("🔮 Sales Prediction")
+
+    st.info(
+        "Machine Learning forecasting will be integrated in Stage 5."
+    )
+
+
+# AI Assistant
+elif page == "AI Assistant":
+
+    st.header("🤖 AI Sales Assistant")
+
+    question = st.chat_input(
+        "Ask anything about your sales data..."
+    )
+
+    if question:
+
+        st.chat_message("user").write(question)
+
+        st.chat_message("assistant").write(
+            "AI integration will be implemented in Stage 6."
+        )
+
+
+# Business Insights
+elif page == "Business Insights":
+
+    st.header("💡 Business Insights")
+
+    st.info(
+        "Automated business recommendations will be implemented in Stage 7."
+    )
+
+
+# Data Explorer
+elif page == "Data Explorer":
+
+    st.header("📁 Data Explorer")
+
+    st.dataframe(
+        df,
+        use_container_width=True
+    )
+
+    st.download_button(
+        "Download Sales Data",
+        df.to_csv(index=False),
+        "sales_data.csv",
+        "text/csv"
+    )
