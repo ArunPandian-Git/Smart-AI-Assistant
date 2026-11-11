@@ -201,86 +201,163 @@ try:
 
     st.sidebar.success("Dataset loaded successfully!")
 
-except Exception as e:
+  # =====================================
+# ADVANCED DASHBOARD
+# =====================================
 
-    st.error(f"Dataset loading error: {e}")
-    st.stop()
-
-# Dashboard
 if page == "Dashboard":
 
-    st.subheader("Business Performance Overview")
+    st.subheader("📊 Business Performance Overview")
 
-    col1, col2, col3, col4 = st.columns(4)
+    if filtered_df.empty:
+        st.warning("No records found for the selected filters.")
 
-    with col1:
-        st.metric(
-            "Total Revenue",
-            f"₹{df['Revenue'].sum():,.0f}"
+    else:
+        # KPI calculations
+        total_revenue = filtered_df["Revenue"].sum()
+        total_profit = filtered_df["Profit"].sum()
+        total_orders = filtered_df["Order_ID"].nunique()
+        total_products = filtered_df["Product"].nunique()
+
+        average_order_value = (
+            total_revenue / total_orders
+            if total_orders > 0 else 0
         )
 
-    with col2:
-        st.metric(
-            "Total Orders",
-            f"{df['Order_ID'].nunique():,}"
+        profit_margin = (
+            (total_profit / total_revenue) * 100
+            if total_revenue != 0 else 0
         )
 
-    with col3:
-        st.metric(
-            "Total Profit",
-            f"₹{df['Profit'].sum():,.0f}"
+        # KPI cards
+        col1, col2, col3 = st.columns(3)
+
+        col1.metric(
+            "💰 Total Revenue",
+            f"₹{total_revenue:,.0f}"
         )
 
-    with col4:
-        st.metric(
-            "Total Products",
-            f"{df['Product'].nunique():,}"
+        col2.metric(
+            "📦 Total Orders",
+            f"{total_orders:,}"
         )
 
-    st.write("---")
+        col3.metric(
+            "💵 Total Profit",
+            f"₹{total_profit:,.0f}"
+        )
 
-    # Revenue chart
-    monthly_sales = (
-        df.groupby(df["Date"].dt.to_period("M"))["Revenue"]
-        .sum()
-        .reset_index()
-    )
+        col4, col5, col6 = st.columns(3)
 
-    monthly_sales["Date"] = (
-        monthly_sales["Date"].astype(str)
-    )
+        col4.metric(
+            "🛍️ Total Products",
+            f"{total_products:,}"
+        )
 
-    fig = px.line(
-        monthly_sales,
-        x="Date",
-        y="Revenue",
-        title="Monthly Revenue Trend",
-        markers=True
-    )
+        col5.metric(
+            "📈 Average Order Value",
+            f"₹{average_order_value:,.0f}"
+        )
 
-    st.plotly_chart(
-        fig,
-        use_container_width=True
-    )
+        col6.metric(
+            "Profit Margin",
+            f"{profit_margin:.2f}%"
+        )
 
-    # Product chart
-    product_sales = (
-        df.groupby("Product")["Revenue"]
-        .sum()
-        .reset_index()
-    )
+        st.write("---")
 
-    fig2 = px.bar(
-        product_sales,
-        x="Product",
-        y="Revenue",
-        title="Product Performance"
-    )
+        # Monthly Revenue Trend
+        st.subheader("📈 Monthly Revenue Trend")
 
-    st.plotly_chart(
-        fig2,
-        use_container_width=True
-    )
+        monthly_sales = (
+            filtered_df.groupby(
+                filtered_df["Date"].dt.to_period("M")
+            )["Revenue"]
+            .sum()
+            .reset_index()
+        )
+
+        monthly_sales["Date"] = monthly_sales["Date"].astype(str)
+
+        fig = px.line(
+            monthly_sales,
+            x="Date",
+            y="Revenue",
+            markers=True,
+            title="Monthly Revenue"
+        )
+
+        fig.update_layout(template="plotly_dark")
+
+        st.plotly_chart(
+            fig,
+            use_container_width=True
+        )
+# Product Analysis
+elif page == "Product Analysis":
+
+    st.header("📦 Product Analysis")
+
+    if filtered_df.empty:
+        st.warning("No product data available for selected filters.")
+
+    else:
+        result = filtered_df.groupby(
+            "Product"
+        )["Revenue"].sum().reset_index()
+
+        st.bar_chart(
+            result,
+            x="Product",
+            y="Revenue"
+        )
+
+        # Regional Analysis
+        st.subheader("🌍 Regional Performance")
+
+        region_sales = (
+            filtered_df.groupby("Region")["Revenue"]
+            .sum()
+            .reset_index()
+        )
+
+        fig3 = px.pie(
+            region_sales,
+            names="Region",
+            values="Revenue",
+            hole=0.4,
+            title="Revenue by Region"
+        )
+
+        fig3.update_layout(template="plotly_dark")
+
+        st.plotly_chart(
+            fig3,
+            use_container_width=True
+        )
+
+        # Category Analysis
+        st.subheader("📊 Category Performance")
+
+        category_sales = (
+            filtered_df.groupby("Category")["Revenue"]
+            .sum()
+            .reset_index()
+        )
+
+        fig4 = px.bar(
+            category_sales,
+            x="Category",
+            y="Revenue",
+            title="Revenue by Category"
+        )
+
+        fig4.update_layout(template="plotly_dark")
+
+        st.plotly_chart(
+            fig4,
+            use_container_width=True
+        )
 
 
 # Sales Analytics
