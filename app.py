@@ -89,8 +89,66 @@ else:
         st.stop()
 
 
-# Convert date
-df["Date"] = pd.to_datetime(df["Date"])
+# =====================================
+# DATA CLEANING AND COLUMN VALIDATION
+# =====================================
+
+# Remove unnecessary spaces from column names
+df.columns = df.columns.str.strip()
+
+# Normalize column names
+df.columns = (
+    df.columns
+    .str.replace(" ", "_")
+    .str.replace("-", "_")
+)
+
+# Convert column names to lowercase
+df.columns = df.columns.str.lower()
+
+# Identify possible date column names
+date_columns = [
+    "date",
+    "order_date",
+    "sales_date",
+    "transaction_date",
+    "saledate"
+]
+
+# Find available date column
+date_column = next(
+    (col for col in date_columns if col in df.columns),
+    None
+)
+
+# Validate date column
+if date_column is None:
+
+    st.error("Date column not found in your dataset.")
+
+    st.write("Available columns:")
+
+    st.write(df.columns.tolist())
+
+    st.info(
+        "Please upload a dataset containing a Date column."
+    )
+
+    st.stop()
+
+# Convert date column
+df[date_column] = pd.to_datetime(
+    df[date_column],
+    errors="coerce"
+)
+
+# Rename to standard Date
+df = df.rename(
+    columns={date_column: "Date"}
+)
+
+# Remove invalid dates
+df = df.dropna(subset=["Date"])
 
 # Dashboard
 if page == "Dashboard":
