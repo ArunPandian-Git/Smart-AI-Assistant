@@ -249,7 +249,7 @@ try:
     filtered_df = filtered_df[
         filtered_df["Region"].isin(selected_regions)
     ]
-    except Exception as e:
+except Exception as e:
 
     st.error(f"Dataset loading error: {e}")
     st.stop()
