@@ -200,6 +200,55 @@ try:
     )
 
     st.sidebar.success("Dataset loaded successfully!")
+        # Dashboard Filters
+    if df.empty:
+        st.error("No valid records found in dataset.")
+        st.stop()
+
+    st.sidebar.markdown("---")
+    st.sidebar.subheader("Dashboard Filters")
+
+    min_date = df["Date"].min().date()
+    max_date = df["Date"].max().date()
+
+    date_range = st.sidebar.date_input(
+        "Select Date Range",
+        value=(min_date, max_date),
+        min_value=min_date,
+        max_value=max_date
+    )
+
+    products = sorted(df["Product"].dropna().unique())
+
+    selected_products = st.sidebar.multiselect(
+        "Select Products",
+        products,
+        default=products
+    )
+
+    regions = sorted(df["Region"].dropna().unique())
+
+    selected_regions = st.sidebar.multiselect(
+        "Select Regions",
+        regions,
+        default=regions
+    )
+
+    filtered_df = df.copy()
+
+    if len(date_range) == 2:
+        filtered_df = filtered_df[
+            (filtered_df["Date"].dt.date >= date_range[0]) &
+            (filtered_df["Date"].dt.date <= date_range[1])
+        ]
+
+    filtered_df = filtered_df[
+        filtered_df["Product"].isin(selected_products)
+    ]
+
+    filtered_df = filtered_df[
+        filtered_df["Region"].isin(selected_regions)
+    ]
     except Exception as e:
 
     st.error(f"Dataset loading error: {e}")
@@ -297,6 +346,19 @@ if page == "Dashboard":
             fig,
             use_container_width=True
         )
+
+
+
+# Sales Analytics
+elif page == "Sales Analytics":
+
+    st.header("📊 Sales Analytics")
+
+    st.dataframe(
+        df,
+        use_container_width=True
+    )
+
 # Product Analysis
 elif page == "Product Analysis":
 
@@ -362,49 +424,6 @@ elif page == "Product Analysis":
             fig4,
             use_container_width=True
         )
-
-
-# Sales Analytics
-elif page == "Sales Analytics":
-
-    st.header("📊 Sales Analytics")
-
-    st.dataframe(
-        df,
-        use_container_width=True
-    )
-
-
-# Product Analysis
-elif page == "Product Analysis":
-
-    st.header("📦 Product Analysis")
-
-    result = df.groupby(
-        "Product"
-    )["Revenue"].sum().reset_index()
-
-    st.bar_chart(
-        result,
-        x="Product",
-        y="Revenue"
-    )
-
-
-# Regional Analysis
-elif page == "Regional Analysis":
-
-    st.header("🌍 Regional Analysis")
-
-    result = df.groupby(
-        "Region"
-    )["Revenue"].sum().reset_index()
-
-    st.bar_chart(
-        result,
-        x="Region",
-        y="Revenue"
-    )
 
 
 # Sales Prediction
