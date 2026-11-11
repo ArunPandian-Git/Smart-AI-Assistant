@@ -1,1 +1,5 @@
-
+| Date | Order_ID | Product | Category | Region | Quantity | Unit_Price | Revenue | Profit |
+|---|---|---|---|---|---:|---:|---:|---:|
+| 2026-01-01 | 1001 | Laptop | Electronics | Chennai | 2 | 45000 | 90000 | 12000 |
+| 2026-01-02 | 1002 | Mobile | Electronics | Bangalore | 3 | 20000 | 60000 | 9000 |
+| 2026-01-03 | 1003 | Chair | Furniture | Mumbai | 4 | 5000 | 20000 | 4000 |
