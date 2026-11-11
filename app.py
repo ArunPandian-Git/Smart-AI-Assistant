@@ -200,6 +200,10 @@ try:
     )
 
     st.sidebar.success("Dataset loaded successfully!")
+    except Exception as e:
+
+    st.error(f"Dataset loading error: {e}")
+    st.stop()
 
   # =====================================
 # ADVANCED DASHBOARD
