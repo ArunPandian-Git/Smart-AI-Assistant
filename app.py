@@ -69,86 +69,142 @@ uploaded_file = st.sidebar.file_uploader(
     type=["csv", "xlsx"]
 )
 
+# =====================================
+# DATASET LOADING AND CLEANING
+# =====================================
 
-# Load dataset
-if uploaded_file is not None:
+import re
 
-    if uploaded_file.name.endswith(".csv"):
-        df = pd.read_csv(uploaded_file)
+try:
+
+    # Load dataset
+    if uploaded_file is not None:
+
+        if uploaded_file.name.endswith(".csv"):
+
+            uploaded_file.seek(0)
+
+            # Automatically detect delimiter
+            df = pd.read_csv(
+                uploaded_file,
+                sep=None,
+                engine="python"
+            )
+
+        else:
+            df = pd.read_excel(uploaded_file)
+
     else:
-        df = pd.read_excel(uploaded_file)
 
-else:
+        file_path = Path("data/sales.csv")
 
-    file_path = Path("data/sales.csv")
+        if not file_path.exists():
+            st.warning("Please upload a sales dataset.")
+            st.stop()
 
-    if file_path.exists():
-        df = pd.read_csv(file_path)
-    else:
-        st.warning("Please upload a sales dataset.")
+        df = pd.read_csv(
+            file_path,
+            sep=None,
+            engine="python"
+        )
+
+    # Clean column names
+    df.columns = [
+        re.sub(
+            r"_+",
+            "_",
+            re.sub(
+                r"[^a-zA-Z0-9]+",
+                "_",
+                str(col).strip().strip("|_")
+            )
+        ).strip("_").lower()
+        for col in df.columns
+    ]
+
+    # Remove empty columns
+    df = df.loc[:, df.columns != ""]
+
+    # Standardize column names
+    column_mapping = {
+        "date": "Date",
+        "order_date": "Date",
+        "sales_date": "Date",
+        "transaction_date": "Date",
+        "order_id": "Order_ID",
+        "product": "Product",
+        "category": "Category",
+        "region": "Region",
+        "quantity": "Quantity",
+        "unit_price": "Unit_Price",
+        "revenue": "Revenue",
+        "profit": "Profit"
+    }
+
+    df = df.rename(columns=column_mapping)
+
+    # Validate required columns
+    required_columns = [
+        "Date",
+        "Order_ID",
+        "Product",
+        "Category",
+        "Region",
+        "Quantity",
+        "Unit_Price",
+        "Revenue",
+        "Profit"
+    ]
+
+    missing_columns = [
+        col for col in required_columns
+        if col not in df.columns
+    ]
+
+    if missing_columns:
+
+        st.error(
+            f"Missing columns: {missing_columns}"
+        )
+
+        st.write(
+            "Available columns:",
+            df.columns.tolist()
+        )
+
         st.stop()
 
-
-# =====================================
-# DATA CLEANING AND COLUMN VALIDATION
-# =====================================
-
-# Remove unnecessary spaces from column names
-df.columns = df.columns.str.strip()
-
-# Normalize column names
-df.columns = (
-    df.columns
-    .str.replace(" ", "_")
-    .str.replace("-", "_")
-)
-
-# Convert column names to lowercase
-df.columns = df.columns.str.lower()
-
-# Identify possible date column names
-date_columns = [
-    "date",
-    "order_date",
-    "sales_date",
-    "transaction_date",
-    "saledate"
-]
-
-# Find available date column
-date_column = next(
-    (col for col in date_columns if col in df.columns),
-    None
-)
-
-# Validate date column
-if date_column is None:
-
-    st.error("Date column not found in your dataset.")
-
-    st.write("Available columns:")
-
-    st.write(df.columns.tolist())
-
-    st.info(
-        "Please upload a dataset containing a Date column."
+    # Convert date
+    df["Date"] = pd.to_datetime(
+        df["Date"],
+        errors="coerce"
     )
 
+    # Convert numerical columns
+    numeric_columns = [
+        "Quantity",
+        "Unit_Price",
+        "Revenue",
+        "Profit"
+    ]
+
+    for col in numeric_columns:
+        df[col] = pd.to_numeric(
+            df[col],
+            errors="coerce"
+        )
+
+    # Remove invalid records
+    df = df.dropna(
+        subset=["Date", "Revenue", "Profit"]
+    )
+
+    st.sidebar.success("Dataset loaded successfully!")
+
+except Exception as e:
+
+    st.error(f"Dataset loading error: {e}")
     st.stop()
-
-# Convert date column
-df[date_column] = pd.to_datetime(
-    df[date_column],
-    errors="coerce"
-)
-
-# Rename to standard Date
-df = df.rename(
-    columns={date_column: "Date"}
-)
-
-# Remove invalid dates
-df = df.dropna(subset=["Date"])
 
 # Dashboard
 if page == "Dashboard":
