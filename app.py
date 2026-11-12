@@ -176,21 +176,30 @@ st.sidebar.markdown("""
         Upload Sales Dataset
     </div>
 
-    <div style="
-        color:#b9accd;
-        font-size:11px;
-        margin-top:5px;
-    ">
-        Import your business data for intelligent analysis.
-    </div>
+ st.markdown("""
+<div style="
+    color:white;
+    font-size:15px;
+    font-weight:700;
+    margin-top:8px;
+">
+    Upload Sales Dataset
+</div>
 
-    <div style="
-        color:#9988c0;
-        font-size:10px;
-        margin-top:10px;
-    ">
-        SUPPORTED FORMATS: CSV • XLSX
-    </div>
+<div style="
+    color:#b9accd;
+    font-size:11px;
+    margin-top:5px;
+">
+    Import your business data for intelligent analysis.
+</div>
+
+<div style="
+    color:#9988c0;
+    font-size:10px;
+    margin-top:10px;
+">
+    SUPPORTED FORMATS: CSV • XLSX
 </div>
 """, unsafe_allow_html=True)
 
