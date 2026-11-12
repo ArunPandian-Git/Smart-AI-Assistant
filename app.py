@@ -68,13 +68,19 @@ st.markdown("""
 st.markdown("""
 <style>
 
-.hero-container {
+st.markdown("""
+<style>
+
+body {
     background: linear-gradient(
         120deg,
-        #302044,
-        #38265c,
-        #211a35
+        #667eea,
+        #764ba2
     );
+}
+
+</style>
+""", unsafe_allow_html=True)
 
     padding: 35px 35px;
     border-radius: 20px;
