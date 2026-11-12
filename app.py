@@ -183,20 +183,53 @@ st.sidebar.markdown("""
     font-weight:700;
     margin-top:8px;
 ">
-    Upload Sales Dataset
-st.markdown("""
-<div style="color:white; font-size:15px; font-weight:700; margin-top:8px;">
+    Upload Sales Datase
+st.sidebar.markdown("""
+<div style="color:white;font-size:15px;font-weight:700;margin-top:8px;">
     Upload Sales Dataset
 </div>
 
-<div style="color:#b9accd; font-size:11px; margin-top:5px;">
+<div style="color:#b9accd;font-size:11px;margin-top:5px;">
     Import your business data for intelligent analysis.
 </div>
 
-<div style="color:#9988c0; font-size:10px; margin-top:10px;">
+<div style="color:#9988c0;font-size:10px;margin-top:10px;">
     SUPPORTED FORMATS: CSV • XLSX
 </div>
 """, unsafe_allow_html=True)
+
+uploaded_file = st.sidebar.file_uploader(
+    "Choose your dataset",
+    type=["csv", "xlsx"],
+    label_visibility="collapsed"
+)
+
+if uploaded_file is not None:
+
+    st.sidebar.success("✅ Dataset uploaded successfully!")
+
+    st.sidebar.markdown(
+        f"""
+        <div style="
+            background:#211c2b;
+            padding:12px;
+            border-radius:10px;
+            border:1px solid #51416b;
+            margin-top:8px;
+        ">
+            <div style="color:#b9a5ff;font-size:12px;">
+                FILE NAME
+            </div>
+            <div style="color:white;font-size:13px;font-weight:600;">
+                {uploaded_file.name}
+            </div>
+            <div style="color:#aaa;font-size:11px;margin-top:5px;">
+                Size: {uploaded_file.size / 1024:.2f} KB
+            </div>
+        </div>
+        """,
+        unsafe_allow_html=True
+    )
 
 uploaded_file = st.sidebar.file_uploader(
     "Choose your dataset",
