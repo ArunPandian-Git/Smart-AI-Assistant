@@ -4,6 +4,8 @@ import plotly.express as px
 
 from groq import Groq
 from pathlib import Path
+from sklearn.linear_model import LinearRegression
+from sklearn.metrics import mean_absolute_error, r2_score
 
 # Page configuration
 st.set_page_config(
@@ -758,14 +760,304 @@ elif page == "Product Analysis":
         )
 
 
-# Sales Prediction
+# ==========================================
+# STAGE 5 - MACHINE LEARNING SALES PREDICTION
+# ==========================================
+
 elif page == "Sales Prediction":
 
-    st.header("🔮 Sales Prediction")
+    st.title("🔮 AI Sales Prediction")
 
-    st.info(
-        "Machine Learning forecasting will be integrated in Stage 5."
+    st.markdown(
+        "### Predict future business revenue using Machine Learning"
     )
+
+    st.write("---")
+
+    # Prepare historical sales data
+    daily_sales = (
+        filtered_df.assign(
+            Date=filtered_df["Date"].dt.normalize()
+        )
+        .groupby("Date")["Revenue"]
+        .sum()
+        .reset_index()
+        .sort_values("Date")
+    )
+
+    if len(daily_sales) < 5:
+
+        st.warning(
+            "Please upload at least 5 different dates of sales data "
+            "to train the prediction model."
+        )
+
+        st.info(
+            "For better predictions, use at least 30-90 days "
+            "of historical sales data."
+        )
+
+    else:
+
+        # ==================================
+        # STEP 1: PREPARE DATA
+        # ==================================
+
+        daily_sales["Day_Number"] = (
+            daily_sales["Date"] -
+            daily_sales["Date"].min()
+        ).dt.days
+
+        X = daily_sales[["Day_Number"]]
+
+        y = daily_sales["Revenue"]
+
+        # ==================================
+        # STEP 2: TRAIN AND TEST DATA
+        # ==================================
+
+        test_size = max(
+            1,
+            round(len(daily_sales) * 0.2)
+        )
+
+        X_train = X.iloc[:-test_size]
+        X_test = X.iloc[-test_size:]
+
+        y_train = y.iloc[:-test_size]
+        y_test = y.iloc[-test_size:]
+
+        # ==================================
+        # STEP 3: TRAIN MODEL
+        # ==================================
+
+        model = LinearRegression()
+
+        model.fit(X_train, y_train)
+
+        # ==================================
+        # STEP 4: MODEL EVALUATION
+        # ==================================
+
+        test_predictions = model.predict(X_test)
+
+        mae = mean_absolute_error(
+            y_test,
+            test_predictions
+        )
+
+        st.subheader("📊 Model Performance")
+
+        col1, col2, col3 = st.columns(3)
+
+        with col1:
+            st.metric(
+                "Training Records",
+                len(X_train)
+            )
+
+        with col2:
+            st.metric(
+                "Mean Absolute Error",
+                f"₹{mae:,.2f}"
+            )
+
+        with col3:
+
+            if len(y_test) >= 2:
+
+                r2 = r2_score(
+                    y_test,
+                    test_predictions
+                )
+
+                st.metric(
+                    "R² Score",
+                    f"{r2:.2f}"
+                )
+
+            else:
+
+                st.metric(
+                    "R² Score",
+                    "Not available"
+                )
+
+        st.caption(
+            "MAE measures the average absolute prediction error. "
+            "R² indicates how well the model explains variation "
+            "in the test data."
+        )
+
+        st.write("---")
+
+        # ==================================
+        # STEP 5: FUTURE SALES PREDICTION
+        # ==================================
+
+        st.subheader("🚀 Predict Future Sales")
+
+        prediction_days = st.selectbox(
+            "Select prediction period",
+            [7, 15, 30, 60, 90],
+            index=2
+        )
+
+        # Train final model using all historical data
+        final_model = LinearRegression()
+
+        final_model.fit(X, y)
+
+        # Generate future dates
+        last_date = daily_sales["Date"].max()
+
+        future_dates = pd.date_range(
+            start=last_date + pd.Timedelta(days=1),
+            periods=prediction_days,
+            freq="D"
+        )
+
+        future_day_numbers = (
+            future_dates - daily_sales["Date"].min()
+        ).days
+
+        future_X = pd.DataFrame({
+            "Day_Number": future_day_numbers
+        })
+
+        # Predict revenue
+        future_predictions = final_model.predict(
+            future_X
+        )
+
+        # Revenue cannot be negative
+        future_predictions = future_predictions.clip(
+            min=0
+        )
+
+        # Create prediction dataframe
+        forecast_df = pd.DataFrame({
+            "Date": future_dates,
+            "Predicted_Revenue": future_predictions
+        })
+
+        # ==================================
+        # STEP 6: DISPLAY PREDICTIONS
+        # ==================================
+
+        total_predicted_revenue = (
+            forecast_df["Predicted_Revenue"].sum()
+        )
+
+        average_predicted_revenue = (
+            forecast_df["Predicted_Revenue"].mean()
+        )
+
+        col1, col2 = st.columns(2)
+
+        with col1:
+
+            st.metric(
+                f"Predicted Revenue ({prediction_days} Days)",
+                f"₹{total_predicted_revenue:,.2f}"
+            )
+
+        with col2:
+
+            st.metric(
+                "Average Daily Predicted Revenue",
+                f"₹{average_predicted_revenue:,.2f}"
+            )
+
+        st.write("---")
+
+        # ==================================
+        # STEP 7: VISUALIZATION
+        # ==================================
+
+        st.subheader("📈 Actual vs Predicted Revenue")
+
+        actual_chart = daily_sales[
+            ["Date", "Revenue"]
+        ].copy()
+
+        actual_chart["Type"] = "Actual Revenue"
+
+        actual_chart = actual_chart.rename(
+            columns={
+                "Revenue": "Amount"
+            }
+        )
+
+        prediction_chart = forecast_df[
+            ["Date", "Predicted_Revenue"]
+        ].copy()
+
+        prediction_chart["Type"] = "Predicted Revenue"
+
+        prediction_chart = prediction_chart.rename(
+            columns={
+                "Predicted_Revenue": "Amount"
+            }
+        )
+
+        chart_data = pd.concat(
+            [
+                actual_chart,
+                prediction_chart
+            ],
+            ignore_index=True
+        )
+
+        fig = px.line(
+            chart_data,
+            x="Date",
+            y="Amount",
+            color="Type",
+            markers=True,
+            title="Historical and Future Sales Forecast"
+        )
+
+        fig.update_layout(
+            template="plotly_dark",
+            paper_bgcolor="rgba(0,0,0,0)",
+            plot_bgcolor="rgba(0,0,0,0)",
+            height=450,
+            yaxis_title="Revenue (₹)",
+            xaxis_title="Date"
+        )
+
+        st.plotly_chart(
+            fig,
+            use_container_width=True
+        )
+
+        # ==================================
+        # STEP 8: PREDICTION TABLE
+        # ==================================
+
+        st.subheader("📋 Future Sales Prediction Table")
+
+        st.dataframe(
+            forecast_df,
+            use_container_width=True,
+            hide_index=True
+        )
+
+        # ==================================
+        # STEP 9: DOWNLOAD PREDICTIONS
+        # ==================================
+
+        csv = forecast_df.to_csv(
+            index=False
+        ).encode("utf-8")
+
+        st.download_button(
+            label="📥 Download Sales Predictions",
+            data=csv,
+            file_name="sales_predictions.csv",
+            mime="text/csv"
+        )
 
 
 # ==========================================
