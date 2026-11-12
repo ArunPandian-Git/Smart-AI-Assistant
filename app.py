@@ -6,6 +6,7 @@ from groq import Groq
 from pathlib import Path
 from sklearn.linear_model import LinearRegression
 from sklearn.metrics import mean_absolute_error, r2_score
+from io import BytesIO
 
 # Page configuration
 st.set_page_config(
@@ -2183,19 +2184,372 @@ BUSINESS RECOMMENDATIONS
                 use_container_width=True
             )
 
-# Data Explorer
+# ==========================================
+# PREMIUM DATA EXPLORER
+# ==========================================
+
 elif page == "Data Explorer":
 
-    st.header("📁 Data Explorer")
+    st.header("📁 Data Intelligence Explorer")
 
-    st.dataframe(
-        df,
-        use_container_width=True
-    )
+    st.markdown("""
+    Explore, search, filter, analyze and export
+    your sales dataset using an interactive data workspace.
+    """)
 
-    st.download_button(
-        "Download Sales Data",
-        df.to_csv(index=False),
-        "sales_data.csv",
-        "text/csv"
-    )
+    st.divider()
+
+    if filtered_df.empty:
+
+        st.warning("No data available. Please change your dashboard filters.")
+
+    else:
+
+        # ----------------------------------
+        # 1. DATA PREPARATION
+        # ----------------------------------
+
+        explorer_df = filtered_df.copy()
+
+        # ----------------------------------
+        # 2. DATASET OVERVIEW
+        # ----------------------------------
+
+        st.subheader("📊 Dataset Overview")
+
+        total_rows = len(explorer_df)
+        total_columns = len(explorer_df.columns)
+        duplicate_rows = explorer_df.duplicated().sum()
+        missing_values = explorer_df.isnull().sum().sum()
+
+        c1, c2, c3, c4 = st.columns(4)
+
+        c1.metric("Total Records", f"{total_rows:,}")
+        c2.metric("Total Columns", f"{total_columns:,}")
+        c3.metric("Duplicate Rows", f"{duplicate_rows:,}")
+        c4.metric("Missing Values", f"{missing_values:,}")
+
+        st.divider()
+
+        # ----------------------------------
+        # 3. SEARCH AND FILTER
+        # ----------------------------------
+
+        st.subheader("🔍 Search & Filter Dataset")
+
+        col1, col2 = st.columns(2)
+
+        with col1:
+
+            search_text = st.text_input(
+                "Search records",
+                placeholder="Search product, region or order ID..."
+            )
+
+        with col2:
+
+            selected_columns = st.multiselect(
+                "Select columns to display",
+                explorer_df.columns.tolist(),
+                default=explorer_df.columns.tolist()
+            )
+
+        col3, col4 = st.columns(2)
+
+        with col3:
+
+            if "Product" in explorer_df.columns:
+
+                products = sorted(
+                    explorer_df["Product"]
+                    .dropna()
+                    .astype(str)
+                    .unique()
+                    .tolist()
+                )
+
+                selected_products = st.multiselect(
+                    "Filter by Product",
+                    products,
+                    default=products
+                )
+
+            else:
+                selected_products = []
+
+        with col4:
+
+            if "Region" in explorer_df.columns:
+
+                regions = sorted(
+                    explorer_df["Region"]
+                    .dropna()
+                    .astype(str)
+                    .unique()
+                    .tolist()
+                )
+
+                selected_regions = st.multiselect(
+                    "Filter by Region",
+                    regions,
+                    default=regions
+                )
+
+            else:
+                selected_regions = []
+
+        # ----------------------------------
+        # 4. APPLY FILTERS
+        # ----------------------------------
+
+        search_df = explorer_df.copy()
+
+        if "Product" in search_df.columns:
+
+            search_df = search_df[
+                search_df["Product"].astype(str).isin(
+                    selected_products
+                )
+            ]
+
+        if "Region" in search_df.columns:
+
+            search_df = search_df[
+                search_df["Region"].astype(str).isin(
+                    selected_regions
+                )
+            ]
+
+        if search_text.strip():
+
+            search_mask = search_df.astype(str).apply(
+                lambda column: column.str.contains(
+                    search_text.strip(),
+                    case=False,
+                    na=False,
+                    regex=False
+                )
+            ).any(axis=1)
+
+            search_df = search_df[search_mask]
+
+        st.divider()
+
+        # ----------------------------------
+        # 5. FILTERED DATA TABLE
+        # ----------------------------------
+
+        st.subheader("📋 Dataset Records")
+
+        st.caption(
+            f"Displaying {len(search_df):,} records "
+            f"out of {len(explorer_df):,} available records."
+        )
+
+        if search_df.empty:
+
+            st.warning("No matching records found.")
+
+        else:
+
+            display_columns = [
+                col for col in selected_columns
+                if col in search_df.columns
+            ]
+
+            if display_columns:
+
+                display_df = search_df[display_columns]
+
+                column_config = {}
+
+                if "Revenue" in display_columns:
+
+                    column_config["Revenue"] = st.column_config.NumberColumn(
+                        "Revenue",
+                        format="₹ %.2f"
+                    )
+
+                if "Profit" in display_columns:
+
+                    column_config["Profit"] = st.column_config.NumberColumn(
+                        "Profit",
+                        format="₹ %.2f"
+                    )
+
+                if "Unit_Price" in display_columns:
+
+                    column_config["Unit_Price"] = st.column_config.NumberColumn(
+                        "Unit Price",
+                        format="₹ %.2f"
+                    )
+
+                st.dataframe(
+                    display_df,
+                    use_container_width=True,
+                    hide_index=True,
+                    height=450,
+                    column_config=column_config
+                )
+
+            else:
+
+                st.warning("Please select at least one column.")
+
+        st.divider()
+
+        # ----------------------------------
+        # 6. DATA QUALITY ANALYSIS
+        # ----------------------------------
+
+        st.subheader("🧹 Data Quality Monitor")
+
+        quality_tab1, quality_tab2, quality_tab3 = st.tabs(
+            [
+                "Missing Values",
+                "Duplicate Records",
+                "Column Information"
+            ]
+        )
+
+        with quality_tab1:
+
+            missing_summary = (
+                explorer_df.isnull()
+                .sum()
+                .reset_index()
+            )
+
+            missing_summary.columns = [
+                "Column",
+                "Missing Values"
+            ]
+
+            missing_summary["Missing Percentage"] = (
+                missing_summary["Missing Values"]
+                / len(explorer_df) * 100
+            ).round(2)
+
+            st.dataframe(
+                missing_summary,
+                use_container_width=True,
+                hide_index=True
+            )
+
+            if missing_values == 0:
+
+                st.success("Excellent! No missing values found.")
+
+            else:
+
+                st.warning(
+                    f"Found {missing_values} missing values. "
+                    "Review these columns before analysis."
+                )
+
+        with quality_tab2:
+
+            st.metric(
+                "Duplicate Records",
+                f"{duplicate_rows:,}"
+            )
+
+            if duplicate_rows == 0:
+
+                st.success("No duplicate records detected.")
+
+            else:
+
+                st.warning(
+                    f"{duplicate_rows} duplicate records detected."
+                )
+
+                st.dataframe(
+                    explorer_df[
+                        explorer_df.duplicated(keep=False)
+                    ],
+                    use_container_width=True
+                )
+
+        with quality_tab3:
+
+            column_info = pd.DataFrame({
+                "Column Name": explorer_df.columns,
+                "Data Type": explorer_df.dtypes.astype(str).values,
+                "Non-Null Count": explorer_df.notnull().sum().values,
+                "Unique Values": explorer_df.nunique().values
+            })
+
+            st.dataframe(
+                column_info,
+                use_container_width=True,
+                hide_index=True
+            )
+
+        st.divider()
+
+        # ----------------------------------
+        # 7. DATA EXPORT CENTER
+        # ----------------------------------
+
+        st.subheader("📥 Data Export Center")
+
+        st.markdown(
+            "Download the complete filtered dataset or "
+            "only the records matching your search."
+        )
+
+        export_df = search_df.copy()
+
+        export_col1, export_col2 = st.columns(2)
+
+        with export_col1:
+
+            csv_data = export_df.to_csv(index=False).encode("utf-8")
+
+            st.download_button(
+                label="📥 Download CSV",
+                data=csv_data,
+                file_name="smart_ai_sales_data.csv",
+                mime="text/csv",
+                use_container_width=True
+            )
+
+        with export_col2:
+
+            excel_buffer = BytesIO()
+
+            with pd.ExcelWriter(
+                excel_buffer,
+                engine="openpyxl"
+            ) as writer:
+
+                export_df.to_excel(
+                    writer,
+                    index=False,
+                    sheet_name="Sales Data"
+                )
+
+                quality_summary = pd.DataFrame({
+                    "Column": explorer_df.columns,
+                    "Missing Values": explorer_df.isnull().sum().values,
+                    "Unique Values": explorer_df.nunique().values
+                })
+
+                quality_summary.to_excel(
+                    writer,
+                    index=False,
+                    sheet_name="Data Quality"
+                )
+
+            st.download_button(
+                label="📊 Download Excel Report",
+                data=excel_buffer.getvalue(),
+                file_name="smart_ai_sales_report.xlsx",
+                mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+                use_container_width=True
+            )
+
+        st.success(
+            "Your Data Explorer workspace is ready!"
+        )
