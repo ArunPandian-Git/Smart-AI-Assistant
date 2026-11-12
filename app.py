@@ -31,14 +31,8 @@ st.set_page_config(
     }
 )
 
-
-# =====================================
-# CUSTOM DASHBOARD THEME
-# =====================================
-
 st.markdown("""
 <style>
-
 .stApp {
     background: linear-gradient(
         135deg,
@@ -64,11 +58,6 @@ st.markdown("""
     border-radius: 20px;
     border: 1px solid #594477;
     margin-bottom: 25px;
-    background: linear-gradient(
-        120deg,
-        #30204b,
-        #21152f
-    );
 }
 
 .hero-title {
@@ -83,71 +72,31 @@ st.markdown("""
 }
 
 .hero-badge {
-    display: inline-block;
     color: #b9a5ff;
-    padding: 7px 15px;
-    border-radius: 30px;
-    border: 1px solid #7665c9;
+    margin-top: 15px;
 }
 
 .hero-description {
     color: #aaa0bd;
     font-size: 13px;
+    margin-top: 15px;
 }
-
 </style>
-""", unsafe_allow_html=True)
 
-
-# ==========================================
-# PREMIUM SIDEBAR NAVIGATION
-# ==========================================
-
-st.sidebar.markdown("""
-<div style="
-    font-size:12px;
-    color:#a99bc5;
-    font-weight:700;
-    letter-spacing:2px;
-    margin-bottom:12px;
-">
-    WORKSPACE MENU
+<div class="hero-container">
+    <div class="hero-title">🤖 Smart AI Assistant</div>
+    <div class="hero-subtitle">
+        Intelligent Sales Analytics & Prediction Platform
+    </div>
+    <div class="hero-badge">
+        ✦ AI POWERED BUSINESS INTELLIGENCE
+    </div>
+    <div class="hero-description">
+        Transform your sales data into actionable business insights
+        with Machine Learning, Advanced Analytics and Generative AI.
+    </div>
 </div>
 """, unsafe_allow_html=True)
-
-page_options = {
-    "🏠  Dashboard": "Dashboard",
-    "📊  Sales Analytics": "Sales Analytics",
-    "📦  Product Analysis": "Product Analysis",
-    "🌍  Regional Analysis": "Regional Analysis",
-    "🔮  Sales Prediction": "Sales Prediction",
-    "🤖  AI Assistant": "AI Assistant",
-    "💡  Business Insights": "Business Insights",
-    "📁  Data Explorer": "Data Explorer"
-}
-
-page = st.sidebar.radio(
-    "Navigation",
-    [
-        "Dashboard",
-        "Sales Analytics",
-        "Product Analysis",
-        "Regional Analysis",
-        "Sales Prediction",
-        "AI Assistant",
-        "Business Insights",
-        "Data Explorer"
-    ]
-)
-
-
-# ==========================================
-# PREMIUM DATASET UPLOAD
-# ==========================================
-
-st.sidebar.markdown("---")
-
-st.sidebar.markdown("""
 <div style="
     font-size:12px;
     color:#a99bc5;
