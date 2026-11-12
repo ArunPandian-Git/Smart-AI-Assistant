@@ -683,82 +683,609 @@ if page == "Dashboard":
             hide_index=True
         )
 
-# Sales Analytics
+# =====================================================
+# PREMIUM SALES ANALYTICS
+# =====================================================
+
 elif page == "Sales Analytics":
 
-    st.header("📊 Sales Analytics")
+    st.title("📊 Sales Intelligence Center")
 
-    st.dataframe(
-        df,
-        use_container_width=True
+    st.markdown(
+        "Analyze revenue, profitability, sales trends and business growth."
     )
 
-# Product Analysis
-elif page == "Product Analysis":
-
-    st.header("📦 Product Analysis")
+    st.divider()
 
     if filtered_df.empty:
+
+        st.warning("No sales data available for the selected filters.")
+
+    else:
+
+        # =========================================
+        # 1. KPI CALCULATIONS
+        # =========================================
+
+        total_revenue = filtered_df["Revenue"].sum()
+        total_profit = filtered_df["Profit"].sum()
+        total_orders = filtered_df["Order_ID"].nunique()
+        total_quantity = filtered_df["Quantity"].sum()
+
+        avg_order_value = (
+            total_revenue / total_orders if total_orders else 0
+        )
+
+        profit_margin = (
+            total_profit / total_revenue * 100
+            if total_revenue else 0
+        )
+
+        # =========================================
+        # 2. PREMIUM KPI CARDS
+        # =========================================
+
+        st.subheader("💎 Business Performance Overview")
+
+        col1, col2, col3 = st.columns(3)
+
+        with col1:
+            st.metric(
+                "💰 Total Revenue",
+                f"₹{total_revenue:,.0f}"
+            )
+
+        with col2:
+            st.metric(
+                "📈 Total Profit",
+                f"₹{total_profit:,.0f}"
+            )
+
+        with col3:
+            st.metric(
+                "📦 Total Orders",
+                f"{total_orders:,}"
+            )
+
+        col4, col5, col6 = st.columns(3)
+
+        with col4:
+            st.metric(
+                "🛒 Units Sold",
+                f"{total_quantity:,}"
+            )
+
+        with col5:
+            st.metric(
+                "💳 Average Order Value",
+                f"₹{avg_order_value:,.0f}"
+            )
+
+        with col6:
+            st.metric(
+                "🎯 Profit Margin",
+                f"{profit_margin:.2f}%"
+            )
+
+        st.divider()
+
+        # =========================================
+        # 3. REVENUE TREND
+        # =========================================
+
+        st.subheader("📈 Revenue Growth Analysis")
+
+        monthly_revenue = (
+            filtered_df.groupby(
+                filtered_df["Date"].dt.to_period("M")
+            )
+            .agg(
+                Revenue=("Revenue", "sum"),
+                Profit=("Profit", "sum")
+            )
+            .reset_index()
+        )
+
+        monthly_revenue["Month"] = (
+            monthly_revenue["Date"].astype(str)
+        )
+
+        fig = px.line(
+            monthly_revenue,
+            x="Month",
+            y=["Revenue", "Profit"],
+            markers=True,
+            title="Monthly Revenue and Profit Trend"
+        )
+
+        fig.update_layout(
+            template="plotly_dark",
+            height=420,
+            paper_bgcolor="rgba(0,0,0,0)",
+            plot_bgcolor="rgba(0,0,0,0)",
+            hovermode="x unified"
+        )
+
+        st.plotly_chart(
+            fig,
+            use_container_width=True
+        )
+
+        # =========================================
+        # 4. DAILY SALES ANALYSIS
+        # =========================================
+
+        st.subheader("📅 Daily Sales Performance")
+
+        daily_sales = (
+            filtered_df.groupby(
+                filtered_df["Date"].dt.date
+            )["Revenue"]
+            .sum()
+            .reset_index()
+        )
+
+        daily_sales.columns = ["Date", "Revenue"]
+
+        fig_daily = px.bar(
+            daily_sales,
+            x="Date",
+            y="Revenue",
+            title="Daily Revenue Performance",
+            text_auto=".2s"
+        )
+
+        fig_daily.update_layout(
+            template="plotly_dark",
+            height=380,
+            paper_bgcolor="rgba(0,0,0,0)",
+            plot_bgcolor="rgba(0,0,0,0)"
+        )
+
+        st.plotly_chart(
+            fig_daily,
+            use_container_width=True
+        )
+
+        st.divider()
+
+        # =========================================
+        # 5. REVENUE AND PROFIT DISTRIBUTION
+        # =========================================
+
+        st.subheader("💹 Revenue vs Profit Analysis")
+
+        col1, col2 = st.columns(2)
+
+        with col1:
+
+            fig_profit = px.bar(
+                monthly_revenue,
+                x="Month",
+                y="Revenue",
+                title="Monthly Revenue",
+                text_auto=".2s"
+            )
+
+            fig_profit.update_layout(
+                template="plotly_dark",
+                height=350
+            )
+
+            st.plotly_chart(
+                fig_profit,
+                use_container_width=True
+            )
+
+        with col2:
+
+            fig_margin = px.bar(
+                monthly_revenue,
+                x="Month",
+                y="Profit",
+                title="Monthly Profit",
+                text_auto=".2s"
+            )
+
+            fig_margin.update_layout(
+                template="plotly_dark",
+                height=350
+            )
+
+            st.plotly_chart(
+                fig_margin,
+                use_container_width=True
+            )
+
+        st.divider()
+
+        # =========================================
+        # 6. BUSINESS INSIGHTS
+        # =========================================
+
+        st.subheader("🧠 Business Performance Insights")
+
+        best_day = daily_sales.loc[
+            daily_sales["Revenue"].idxmax()
+        ]
+
+        st.info(
+            f"""
+            **Business Summary**
+
+            - Total Revenue: ₹{total_revenue:,.2f}
+            - Total Profit: ₹{total_profit:,.2f}
+            - Total Orders: {total_orders}
+            - Average Order Value: ₹{avg_order_value:,.2f}
+            - Profit Margin: {profit_margin:.2f}%
+            - Best Sales Date: {best_day['Date']}
+            - Revenue on Best Sales Date: ₹{best_day['Revenue']:,.2f}
+            """
+        )
+
+        # =========================================
+        # 7. TRANSACTION DATA
+        # =========================================
+
+        st.subheader("📋 Detailed Sales Transactions")
+
+        st.dataframe(
+            filtered_df.sort_values(
+                "Date",
+                ascending=False
+            ),
+            use_container_width=True,
+            hide_index=True
+        )
+
+
+# =====================================================
+# PREMIUM PRODUCT ANALYSIS
+# =====================================================
+
+elif page == "Product Analysis":
+
+    st.title("📦 Product Intelligence Center")
+
+    st.markdown(
+        "Discover your best-selling products, revenue contribution "
+        "and product profitability."
+    )
+
+    st.divider()
+
+    if filtered_df.empty:
+
         st.warning("No product data available for selected filters.")
 
     else:
-        result = filtered_df.groupby(
-            "Product"
-        )["Revenue"].sum().reset_index()
 
-        st.bar_chart(
-            result,
-            x="Product",
-            y="Revenue"
-        )
+        # =========================================
+        # 1. PRODUCT SUMMARY
+        # =========================================
 
-        # Regional Analysis
-        st.subheader("🌍 Regional Performance")
-
-        region_sales = (
-            filtered_df.groupby("Region")["Revenue"]
-            .sum()
+        product_summary = (
+            filtered_df.groupby("Product")
+            .agg(
+                Revenue=("Revenue", "sum"),
+                Profit=("Profit", "sum"),
+                Quantity=("Quantity", "sum"),
+                Orders=("Order_ID", "nunique")
+            )
             .reset_index()
+            .sort_values("Revenue", ascending=False)
         )
 
-        fig3 = px.pie(
-            region_sales,
-            names="Region",
+        best_product = product_summary.iloc[0]
+
+        total_product_revenue = product_summary["Revenue"].sum()
+
+        total_product_profit = product_summary["Profit"].sum()
+
+        total_products = len(product_summary)
+
+        # =========================================
+        # 2. PRODUCT KPI CARDS
+        # =========================================
+
+        st.subheader("💎 Product Performance Overview")
+
+        col1, col2, col3, col4 = st.columns(4)
+
+        with col1:
+            st.metric(
+                "🛍️ Total Products",
+                total_products
+            )
+
+        with col2:
+            st.metric(
+                "💰 Product Revenue",
+                f"₹{total_product_revenue:,.0f}"
+            )
+
+        with col3:
+            st.metric(
+                "📈 Product Profit",
+                f"₹{total_product_profit:,.0f}"
+            )
+
+        with col4:
+            st.metric(
+                "🏆 Best-Selling Product",
+                best_product["Product"]
+            )
+
+        st.divider()
+
+        # =========================================
+        # 3. PRODUCT REVENUE RANKING
+        # =========================================
+
+        st.subheader("🏆 Product Revenue Ranking")
+
+        fig_product = px.bar(
+            product_summary,
+            x="Product",
+            y="Revenue",
+            color="Product",
+            text_auto=".2s",
+            title="Revenue Generated by Each Product"
+        )
+
+        fig_product.update_layout(
+            template="plotly_dark",
+            height=420,
+            paper_bgcolor="rgba(0,0,0,0)",
+            plot_bgcolor="rgba(0,0,0,0)",
+            showlegend=False
+        )
+
+        st.plotly_chart(
+            fig_product,
+            use_container_width=True
+        )
+
+        # =========================================
+        # 4. PRODUCT PROFIT ANALYSIS
+        # =========================================
+
+        st.subheader("💹 Product Profitability")
+
+        fig_profit = px.bar(
+            product_summary,
+            x="Product",
+            y="Profit",
+            color="Product",
+            text_auto=".2s",
+            title="Profit Contribution by Product"
+        )
+
+        fig_profit.update_layout(
+            template="plotly_dark",
+            height=400,
+            showlegend=False
+        )
+
+        st.plotly_chart(
+            fig_profit,
+            use_container_width=True
+        )
+
+        st.divider()
+
+        # =========================================
+        # 5. PRODUCT REVENUE CONTRIBUTION
+        # =========================================
+
+        st.subheader("🍩 Product Revenue Contribution")
+
+        fig_pie = px.pie(
+            product_summary,
+            names="Product",
             values="Revenue",
-            hole=0.4,
+            hole=0.55,
+            title="Percentage Revenue Share by Product"
+        )
+
+        fig_pie.update_layout(
+            template="plotly_dark",
+            height=420
+        )
+
+        st.plotly_chart(
+            fig_pie,
+            use_container_width=True
+        )
+
+        st.divider()
+
+        # =========================================
+        # 6. CATEGORY ANALYSIS
+        # =========================================
+
+        st.subheader("📊 Category Performance")
+
+        category_summary = (
+            filtered_df.groupby("Category")
+            .agg(
+                Revenue=("Revenue", "sum"),
+                Profit=("Profit", "sum"),
+                Quantity=("Quantity", "sum")
+            )
+            .reset_index()
+            .sort_values("Revenue", ascending=False)
+        )
+
+        fig_category = px.bar(
+            category_summary,
+            x="Category",
+            y="Revenue",
+            color="Category",
+            text_auto=".2s",
+            title="Revenue by Product Category"
+        )
+
+        fig_category.update_layout(
+            template="plotly_dark",
+            height=380,
+            showlegend=False
+        )
+
+        st.plotly_chart(
+            fig_category,
+            use_container_width=True
+        )
+
+        # =========================================
+        # 7. TOP PRODUCT INSIGHTS
+        # =========================================
+
+        st.subheader("🧠 Product Business Insights")
+
+        st.success(
+            f"""
+            **Top Performing Product: {best_product['Product']}**
+
+            - Revenue: ₹{best_product['Revenue']:,.2f}
+            - Profit: ₹{best_product['Profit']:,.2f}
+            - Quantity Sold: {best_product['Quantity']}
+            - Orders: {best_product['Orders']}
+            """
+        )
+
+        # =========================================
+        # 8. PRODUCT PERFORMANCE TABLE
+        # =========================================
+
+        st.subheader("📋 Complete Product Performance")
+
+        st.dataframe(
+            product_summary,
+            use_container_width=True,
+            hide_index=True
+        )
+
+        # =========================================
+        # 9. DOWNLOAD PRODUCT REPORT
+        # =========================================
+
+        product_csv = product_summary.to_csv(
+            index=False
+        ).encode("utf-8")
+
+        st.download_button(
+            "📥 Download Product Analysis Report",
+            data=product_csv,
+            file_name="product_analysis_report.csv",
+            mime="text/csv"
+        )
+
+
+# =====================================================
+# PREMIUM REGIONAL ANALYSIS
+# =====================================================
+
+elif page == "Regional Analysis":
+
+    st.title("🌍 Regional Business Intelligence")
+
+    st.markdown(
+        "Explore sales distribution, revenue contribution "
+        "and profitability across business regions."
+    )
+
+    st.divider()
+
+    if filtered_df.empty:
+
+        st.warning("No regional data available.")
+
+    else:
+
+        region_summary = (
+            filtered_df.groupby("Region")
+            .agg(
+                Revenue=("Revenue", "sum"),
+                Profit=("Profit", "sum"),
+                Orders=("Order_ID", "nunique"),
+                Quantity=("Quantity", "sum")
+            )
+            .reset_index()
+            .sort_values("Revenue", ascending=False)
+        )
+
+        best_region = region_summary.iloc[0]
+
+        col1, col2, col3 = st.columns(3)
+
+        with col1:
+            st.metric(
+                "🌍 Total Regions",
+                len(region_summary)
+            )
+
+        with col2:
+            st.metric(
+                "💰 Total Revenue",
+                f"₹{region_summary['Revenue'].sum():,.0f}"
+            )
+
+        with col3:
+            st.metric(
+                "🏆 Top Region",
+                best_region["Region"]
+            )
+
+        st.divider()
+
+        # Regional revenue chart
+        fig_region = px.bar(
+            region_summary,
+            x="Region",
+            y="Revenue",
+            color="Region",
+            text_auto=".2s",
             title="Revenue by Region"
         )
 
-        fig3.update_layout(template="plotly_dark")
+        fig_region.update_layout(
+            template="plotly_dark",
+            height=400,
+            showlegend=False
+        )
 
         st.plotly_chart(
-            fig3,
+            fig_region,
             use_container_width=True
         )
 
-        # Category Analysis
-        st.subheader("📊 Category Performance")
-
-        category_sales = (
-            filtered_df.groupby("Category")["Revenue"]
-            .sum()
-            .reset_index()
+        # Regional profit distribution
+        fig_region_profit = px.pie(
+            region_summary,
+            names="Region",
+            values="Profit",
+            hole=0.5,
+            title="Profit Contribution by Region"
         )
 
-        fig4 = px.bar(
-            category_sales,
-            x="Category",
-            y="Revenue",
-            title="Revenue by Category"
+        fig_region_profit.update_layout(
+            template="plotly_dark",
+            height=400
         )
-
-        fig4.update_layout(template="plotly_dark")
 
         st.plotly_chart(
-            fig4,
+            fig_region_profit,
             use_container_width=True
         )
 
+        st.subheader("📋 Regional Performance Report")
+
+        st.dataframe(
+            region_summary,
+            use_container_width=True,
+            hide_index=True
+        )
 
 # ==========================================
 # STAGE 5 - MACHINE LEARNING SALES PREDICTION
