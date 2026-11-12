@@ -66,6 +66,29 @@ st.markdown("""
     color: #ffffff;
 }
 
+/* Premium sidebar navigation */
+[data-testid="stSidebar"] [data-testid="stRadio"] label {
+    background: linear-gradient(120deg, #211c2b, #292139);
+    padding: 12px 15px;
+    border-radius: 11px;
+    margin-bottom: 8px;
+    border: 1px solid #39304d;
+    transition: all 0.3s ease;
+}
+
+/* Hover effect */
+[data-testid="stSidebar"] [data-testid="stRadio"] label:hover {
+    background: #403258;
+    border-color: #8985ff;
+}
+
+/* Selected navigation */
+[data-testid="stSidebar"] [data-testid="stRadio"] label:has(input:checked) {
+    background: linear-gradient(100deg, #6855c9, #9275e9);
+    border: 1px solid #a99aff;
+    box-shadow: 0 4px 15px rgba(137,133,255,0.25);
+}
+
 /* =====================================
    PREMIUM SIDEBAR NAVIGATION
 ===================================== */
