@@ -353,7 +353,7 @@ elif page == "AI Assistant":
                 try:
                     client = Groq(api_key=api_key)
                     response = client.chat.completions.create(
-                        model="llama-3.3-70b-versatile",
+                        model="openai/gpt-oss-120b",
                         messages=[
                             {"role": "system", "content": "You are a concise senior business data analyst. Use the supplied dataset summary, distinguish facts from recommendations, and never invent data. " + context},
                             *[{"role": m["role"], "content": m["content"]} for m in st.session_state.chat_messages[-8:]],
