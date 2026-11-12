@@ -153,11 +153,41 @@ st.sidebar.markdown("""
 </div>
 """, unsafe_allow_html=True)
 
+# =====================================
+# SIDEBAR NAVIGATION
+# =====================================
+
+st.sidebar.markdown("""
+<div style="font-size:25px;font-weight:bold;color:#9995ff;">
+    🤖 SMART AI
+</div>
+<div style="font-size:12px;color:#aaaaaa;">
+    SALES INTELLIGENCE PLATFORM
+</div>
+""", unsafe_allow_html=True)
+
+# ADD NAVIGATION HERE
+page = st.sidebar.radio(
+    "Navigation",
+    [
+        "Dashboard",
+        "Sales Analytics",
+        "Product Analysis",
+        "Regional Analysis",
+        "Sales Prediction",
+        "AI Assistant",
+        "Business Insights",
+        "Data Explorer"
+    ]
+)
+
+
 # Upload dataset
 uploaded_file = st.sidebar.file_uploader(
     "Upload Sales Dataset",
     type=["csv", "xlsx"]
 )
+
 
 # =====================================
 # DATASET LOADING AND CLEANING
