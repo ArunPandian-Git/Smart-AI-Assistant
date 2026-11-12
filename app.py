@@ -8,11 +8,27 @@ from sklearn.linear_model import LinearRegression
 from sklearn.metrics import mean_absolute_error, r2_score
 from io import BytesIO
 
-# Page configuration
+# ==========================================
+# PREMIUM PAGE CONFIGURATION
+# ==========================================
+
 st.set_page_config(
-    page_title="Smart AI Assistant",
+    page_title="Smart AI Assistant | Sales Intelligence",
     page_icon="🤖",
-    layout="wide"
+    layout="wide",
+    initial_sidebar_state="expanded",
+    menu_items={
+        "Get Help": "https://docs.streamlit.io/",
+        "Report a bug": "https://github.com/",
+        "About": """
+        # Smart AI Assistant
+
+        Intelligent Sales Analytics & Prediction Platform.
+
+        Powered by Python, Machine Learning,
+        Data Analytics and Generative AI.
+        """
+    }
 )
 
 # =====================================
@@ -50,18 +66,44 @@ st.markdown("""
     color: #ffffff;
 }
 
-/* Sidebar navigation */
+/* =====================================
+   PREMIUM SIDEBAR NAVIGATION
+===================================== */
+
+/* Navigation buttons */
+
 [data-testid="stSidebar"] [data-testid="stRadio"] label {
-    background-color: #211c2b;
-    padding: 12px;
-    border-radius: 10px;
-    margin-bottom: 7px;
+    background: linear-gradient(
+        120deg,
+        #211c2b,
+        #292139
+    );
+
+    padding: 12px 15px;
+    border-radius: 11px;
+    margin-bottom: 8px;
+    border: 1px solid #39304d;
+    transition: all 0.3s ease;
+}
+
+/* Hover effect */
+
+[data-testid="stSidebar"] [data-testid="stRadio"] label:hover {
+    background: #403258;
+    border-color: #8985ff;
 }
 
 /* Selected navigation */
+
 [data-testid="stSidebar"] [data-testid="stRadio"] label:has(input:checked) {
-    background-color: #8985ff;
-    color: white;
+    background: linear-gradient(
+        100deg,
+        #6855c9,
+        #9275e9
+    );
+
+    border: 1px solid #a99aff;
+    box-shadow: 0 4px 15px rgba(137,133,255,0.25);
 }
 
 /* Headings */
@@ -124,36 +166,133 @@ h1, h2, h3 {
 </style>
 """, unsafe_allow_html=True)
 
+# ==========================================
+# PREMIUM APPLICATION HERO SECTION
+# ==========================================
 
-# Application title
-st.title("🤖 Smart AI Assistant")
+st.markdown("""
+<style>
 
-st.markdown(
-    "### Intelligent Sales Analytics & Prediction Platform"
-)
+.hero-container {
+    background: linear-gradient(
+        120deg,
+        #302044,
+        #38265c,
+        #211a35
+    );
 
-st.write("---")
+    padding: 35px 35px;
+    border-radius: 20px;
+    border: 1px solid #594477;
+    margin-bottom: 25px;
+
+    box-shadow: 0 8px 30px rgba(0,0,0,0.25);
+}
+
+.hero-title {
+    font-size: 42px;
+    font-weight: 850;
+    letter-spacing: -1px;
+
+    background: linear-gradient(
+        90deg,
+        #ffffff,
+        #b9a5ff,
+        #8f83ff
+    );
+
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+
+    margin-bottom: 8px;
+}
+
+.hero-subtitle {
+    color: #d1c5e7;
+    font-size: 16px;
+    margin-top: 5px;
+}
+
+.hero-badge {
+    display: inline-block;
+    background: rgba(137,133,255,0.15);
+    color: #b9a5ff;
+    border: 1px solid #7665c9;
+    border-radius: 30px;
+    padding: 7px 15px;
+    font-size: 11px;
+    font-weight: bold;
+    letter-spacing: 1px;
+    margin-top: 15px;
+}
+
+.hero-description {
+    color: #aaa0bd;
+    font-size: 13px;
+    margin-top: 15px;
+}
+
+</style>
+
+<div class="hero-container">
+
+    <div class="hero-title">
+        🤖 Smart AI Assistant
+    </div>
+
+    <div class="hero-subtitle">
+        Intelligent Sales Analytics & Prediction Platform
+    </div>
+
+    <div class="hero-badge">
+        ✦ AI POWERED BUSINESS INTELLIGENCE
+    </div>
+
+    <div class="hero-description">
+        Transform your sales data into actionable business insights
+        with Machine Learning, Advanced Analytics and Generative AI.
+    </div>
+
+</div>
+""", unsafe_allow_html=True)
 
 
-# Sidebar
-st.sidebar.title("SMART AI")
+# =====================================
+# PREMIUM SIDEBAR BRANDING
+# =====================================
 
 st.sidebar.markdown("""
 <div style="
-    padding:15px 5px 25px 5px;
-    font-size:25px;
-    font-weight:bold;
-    color:#9995ff;
-">
-    🤖 SMART AI
-</div>
-
-<div style="
-    color:#aaa;
-    font-size:12px;
+    padding:20px 10px;
     margin-bottom:20px;
+    background:linear-gradient(135deg,#302744,#211c2b);
+    border:1px solid #51416b;
+    border-radius:15px;
 ">
-    SALES INTELLIGENCE PLATFORM
+    <div style="
+        font-size:25px;
+        font-weight:800;
+        color:#9995ff;
+    ">
+        🤖 SMART AI
+    </div>
+
+    <div style="
+        font-size:11px;
+        color:#c7bfd8;
+        margin-top:8px;
+        letter-spacing:1px;
+    ">
+        SALES INTELLIGENCE PLATFORM
+    </div>
+
+    <div style="
+        font-size:10px;
+        color:#8e83aa;
+        margin-top:12px;
+    ">
+        PREMIUM ANALYTICS WORKSPACE
+    </div>
 </div>
 """, unsafe_allow_html=True)
 
@@ -161,16 +300,6 @@ st.sidebar.markdown("""
 # SIDEBAR NAVIGATION
 # =====================================
 
-st.sidebar.markdown("""
-<div style="font-size:25px;font-weight:bold;color:#9995ff;">
-    🤖 SMART AI
-</div>
-<div style="font-size:12px;color:#aaaaaa;">
-    SALES INTELLIGENCE PLATFORM
-</div>
-""", unsafe_allow_html=True)
-
-# ADD NAVIGATION HERE
 page = st.sidebar.radio(
     "Navigation",
     [
@@ -185,12 +314,144 @@ page = st.sidebar.radio(
     ]
 )
 
+# =====================================
+# SIDEBAR NAVIGATION
+# =====================================
 
-# Upload dataset
-uploaded_file = st.sidebar.file_uploader(
-    "Upload Sales Dataset",
-    type=["csv", "xlsx"]
+st.sidebar.markdown("""
+<div style="font-size:25px;font-weight:bold;color:#9995ff;">
+    🤖 SMART AI
+</div>
+<div style="font-size:12px;color:#aaaaaa;">
+    SALES INTELLIGENCE PLATFORM
+</div>
+""", unsafe_allow_html=True)
+
+# ==========================================
+# PREMIUM SIDEBAR NAVIGATION
+# ==========================================
+
+st.sidebar.markdown("""
+<div style="
+    font-size:12px;
+    color:#a99bc5;
+    font-weight:700;
+    letter-spacing:2px;
+    margin-bottom:12px;
+">
+    WORKSPACE MENU
+</div>
+""", unsafe_allow_html=True)
+
+page_options = {
+    "🏠  Dashboard": "Dashboard",
+    "📊  Sales Analytics": "Sales Analytics",
+    "📦  Product Analysis": "Product Analysis",
+    "🌍  Regional Analysis": "Regional Analysis",
+    "🔮  Sales Prediction": "Sales Prediction",
+    "🤖  AI Assistant": "AI Assistant",
+    "💡  Business Insights": "Business Insights",
+    "📁  Data Explorer": "Data Explorer"
+}
+
+selected_page = st.sidebar.radio(
+    "Navigate",
+    list(page_options.keys()),
+    label_visibility="collapsed"
 )
+
+page = page_options[selected_page]
+
+
+# ==========================================
+# PREMIUM DATASET UPLOAD
+# ==========================================
+
+st.sidebar.markdown("---")
+
+st.sidebar.markdown("""
+<div style="
+    font-size:12px;
+    color:#a99bc5;
+    font-weight:700;
+    letter-spacing:2px;
+    margin-bottom:12px;
+">
+    DATA MANAGEMENT
+</div>
+
+<div style="
+    background:linear-gradient(135deg,#302744,#211c2b);
+    padding:15px;
+    border-radius:13px;
+    border:1px solid #51416b;
+    margin-bottom:12px;
+">
+    <div style="font-size:22px;">📂</div>
+
+    <div style="
+        color:white;
+        font-size:15px;
+        font-weight:700;
+        margin-top:8px;
+    ">
+        Upload Sales Dataset
+    </div>
+
+    <div style="
+        color:#b9accd;
+        font-size:11px;
+        margin-top:5px;
+    ">
+        Import your business data for intelligent analysis.
+    </div>
+
+    <div style="
+        color:#9988c0;
+        font-size:10px;
+        margin-top:10px;
+    ">
+        SUPPORTED FORMATS: CSV • XLSX
+    </div>
+</div>
+""", unsafe_allow_html=True)
+
+uploaded_file = st.sidebar.file_uploader(
+    "Choose your dataset",
+    type=["csv", "xlsx"],
+    label_visibility="collapsed"
+)
+
+if uploaded_file is not None:
+
+    st.sidebar.success("✅ Dataset uploaded successfully!")
+
+    st.sidebar.markdown(
+        f"""
+        <div style="
+            background:#211c2b;
+            padding:12px;
+            border-radius:10px;
+            border:1px solid #51416b;
+            margin-top:8px;
+        ">
+            <div style="color:#b9a5ff;font-size:12px;">
+                FILE NAME
+            </div>
+            <div style="color:white;font-size:13px;font-weight:600;">
+                {uploaded_file.name}
+            </div>
+            <div style="color:#aaa;font-size:11px;margin-top:5px;">
+                Size: {uploaded_file.size / 1024:.2f} KB
+            </div>
+        </div>
+        """,
+        unsafe_allow_html=True
+    )
+
+else:
+
+    st.sidebar.info("Upload a dataset to begin analysis.")
 
 
 # =====================================
@@ -1239,54 +1500,222 @@ elif page == "Regional Analysis":
             )
 
         st.divider()
+# ==========================================
+# PREMIUM REGIONAL ANALYSIS
+# ==========================================
 
-        # Regional revenue chart
-        fig_region = px.bar(
-            region_summary,
-            x="Region",
-            y="Revenue",
-            color="Region",
-            text_auto=".2s",
-            title="Revenue by Region"
-        )
+st.markdown("## 🌍 Regional Intelligence")
+st.caption("Analyze revenue, profitability and business performance across regions.")
 
-        fig_region.update_layout(
-            template="plotly_dark",
-            height=400,
-            showlegend=False
-        )
+# Sort regional data
+region_summary = region_summary.sort_values(
+    by="Revenue",
+    ascending=False
+)
 
-        st.plotly_chart(
-            fig_region,
-            use_container_width=True
-        )
+# ==========================================
+# 1. REGIONAL KPI CARDS
+# ==========================================
 
-        # Regional profit distribution
-        fig_region_profit = px.pie(
-            region_summary,
-            names="Region",
-            values="Profit",
-            hole=0.5,
-            title="Profit Contribution by Region"
-        )
+total_revenue = region_summary["Revenue"].sum()
+total_profit = region_summary["Profit"].sum()
+total_regions = region_summary["Region"].nunique()
 
-        fig_region_profit.update_layout(
-            template="plotly_dark",
-            height=400
-        )
+top_region = region_summary.iloc[0]["Region"]
+top_region_revenue = region_summary.iloc[0]["Revenue"]
 
-        st.plotly_chart(
-            fig_region_profit,
-            use_container_width=True
-        )
+profit_margin = (
+    (total_profit / total_revenue) * 100
+    if total_revenue > 0 else 0
+)
 
-        st.subheader("📋 Regional Performance Report")
+col1, col2, col3, col4 = st.columns(4)
 
-        st.dataframe(
-            region_summary,
-            use_container_width=True,
-            hide_index=True
-        )
+with col1:
+    st.metric(
+        "🌍 Total Regions",
+        total_regions
+    )
+
+with col2:
+    st.metric(
+        "💰 Total Revenue",
+        f"₹{total_revenue:,.0f}"
+    )
+
+with col3:
+    st.metric(
+        "📈 Total Profit",
+        f"₹{total_profit:,.0f}"
+    )
+
+with col4:
+    st.metric(
+        "🏆 Profit Margin",
+        f"{profit_margin:.2f}%"
+    )
+
+st.markdown("---")
+
+# ==========================================
+# 2. REVENUE BY REGION
+# ==========================================
+
+st.subheader("📊 Regional Revenue Performance")
+
+fig_region = px.bar(
+    region_summary,
+    x="Region",
+    y="Revenue",
+    color="Revenue",
+    text_auto=".2s",
+    title="Revenue Comparison Across Regions",
+    color_continuous_scale="Purples",
+    template="plotly_dark"
+)
+
+fig_region.update_traces(
+    marker_line_width=1,
+    textposition="outside"
+)
+
+fig_region.update_layout(
+    height=450,
+    showlegend=False,
+    title_x=0.02,
+    xaxis_title="Business Region",
+    yaxis_title="Total Revenue",
+    coloraxis_showscale=False,
+    margin=dict(l=20, r=20, t=60, b=20)
+)
+
+st.plotly_chart(
+    fig_region,
+    use_container_width=True
+)
+
+# ==========================================
+# 3. PROFIT CONTRIBUTION
+# ==========================================
+
+st.subheader("💎 Regional Profit Distribution")
+
+col1, col2 = st.columns([1.5, 1])
+
+with col1:
+
+    fig_region_profit = px.pie(
+        region_summary,
+        names="Region",
+        values="Profit",
+        hole=0.6,
+        title="Profit Contribution by Region",
+        template="plotly_dark",
+        color_discrete_sequence=px.colors.sequential.Purples
+    )
+
+    fig_region_profit.update_traces(
+        textposition="inside",
+        textinfo="percent+label",
+        hole=0.6
+    )
+
+    fig_region_profit.update_layout(
+        height=420,
+        title_x=0.02,
+        margin=dict(l=20, r=20, t=60, b=20)
+    )
+
+    st.plotly_chart(
+        fig_region_profit,
+        use_container_width=True
+    )
+
+with col2:
+
+    st.markdown("### 🏆 Top Performing Region")
+
+    st.markdown(
+        f"""
+        <div style="
+            background:linear-gradient(135deg,#30204b,#514078);
+            padding:25px;
+            border-radius:18px;
+            border:1px solid #8170b5;
+            margin-top:15px;
+        ">
+            <p style="color:#c9b9ff;font-size:14px;">
+                BEST REGION
+            </p>
+            <h2 style="color:white;">🌍 {top_region}</h2>
+            <h3 style="color:#b8a4ff;">
+                ₹{top_region_revenue:,.2f}
+            </h3>
+            <p style="color:#ddd;">
+                Highest revenue-generating region.
+            </p>
+        </div>
+        """,
+        unsafe_allow_html=True
+    )
+
+    st.markdown("<br>", unsafe_allow_html=True)
+
+    st.metric(
+        "Overall Profit Margin",
+        f"{profit_margin:.2f}%"
+    )
+
+# ==========================================
+# 4. REGIONAL PERFORMANCE REPORT
+# ==========================================
+
+st.markdown("---")
+
+st.subheader("📋 Regional Performance Report")
+
+display_region = region_summary.copy()
+
+display_region["Revenue"] = display_region["Revenue"].round(2)
+display_region["Profit"] = display_region["Profit"].round(2)
+
+st.dataframe(
+    display_region,
+    use_container_width=True,
+    hide_index=True
+)
+
+# ==========================================
+# 5. BUSINESS INSIGHTS
+# ==========================================
+
+st.markdown("---")
+
+st.subheader("💡 Regional Business Insights")
+
+insight_col1, insight_col2 = st.columns(2)
+
+with insight_col1:
+
+    st.success(
+        f"""
+        🏆 **Best Performing Region**
+
+        {top_region} generates the highest revenue
+        with ₹{top_region_revenue:,.2f}.
+        """
+    )
+
+with insight_col2:
+
+    st.info(
+        f"""
+        📊 **Business Overview**
+
+        Your business operates across {total_regions} regions
+        with an overall profit margin of {profit_margin:.2f}%.
+        """
+    )
 
 # ==========================================
 # STAGE 5 - MACHINE LEARNING SALES PREDICTION
