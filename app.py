@@ -2,6 +2,7 @@ import streamlit as st
 import pandas as pd
 import plotly.express as px
 
+from groq import Groq
 from pathlib import Path
 
 # Page configuration
@@ -767,23 +768,194 @@ elif page == "Sales Prediction":
     )
 
 
-# AI Assistant
+# ==========================================
+# AI SALES ASSISTANT - GROQ INTEGRATION
+# ==========================================
+
 elif page == "AI Assistant":
 
-    st.header("🤖 AI Sales Assistant")
+    st.title("🤖 AI Sales Assistant")
 
-    question = st.chat_input(
-        "Ask anything about your sales data..."
+    st.markdown(
+        "### Ask questions about your business data"
     )
 
-    if question:
+    st.caption(
+        "Powered by Groq AI and Llama 3.3"
+    )
 
-        st.chat_message("user").write(question)
+    # Check dataset
+    if filtered_df.empty:
 
-        st.chat_message("assistant").write(
-            "AI integration will be implemented in Stage 6."
+        st.warning(
+            "No sales data available. Please change your filters."
         )
 
+    else:
+
+        # ==================================
+        # CREATE DATASET CONTEXT
+        # ==================================
+
+        total_revenue = filtered_df["Revenue"].sum()
+        total_profit = filtered_df["Profit"].sum()
+        total_orders = filtered_df["Order_ID"].nunique()
+
+        product_summary = (
+            filtered_df.groupby("Product")
+            .agg(
+                Revenue=("Revenue", "sum"),
+                Quantity=("Quantity", "sum"),
+                Profit=("Profit", "sum")
+            )
+            .sort_values("Revenue", ascending=False)
+            .reset_index()
+        )
+
+        region_summary = (
+            filtered_df.groupby("Region")["Revenue"]
+            .sum()
+            .sort_values(ascending=False)
+        )
+
+        category_summary = (
+            filtered_df.groupby("Category")["Revenue"]
+            .sum()
+            .sort_values(ascending=False)
+        )
+
+        data_context = f"""
+        SALES DATA SUMMARY
+
+        Total Revenue: ₹{total_revenue:,.2f}
+
+        Total Profit: ₹{total_profit:,.2f}
+
+        Total Orders: {total_orders}
+
+        Total Products: {filtered_df['Product'].nunique()}
+
+        Total Quantity Sold: {filtered_df['Quantity'].sum()}
+
+        Product Performance:
+        {product_summary.to_string(index=False)}
+
+        Regional Performance:
+        {region_summary.to_string()}
+
+        Category Performance:
+        {category_summary.to_string()}
+        """
+
+        # ==================================
+        # CHAT HISTORY
+        # ==================================
+
+        if "chat_history" not in st.session_state:
+            st.session_state.chat_history = []
+
+        # Clear chat button
+        if st.button("🗑️ Clear Conversation"):
+
+            st.session_state.chat_history = []
+            st.rerun()
+
+        # ==================================
+        # DISPLAY OLD MESSAGES
+        # ==================================
+
+        for message in st.session_state.chat_history:
+
+            with st.chat_message(message["role"]):
+                st.markdown(message["content"])
+
+        # ==================================
+        # CHAT INPUT
+        # ==================================
+
+        question = st.chat_input(
+            "Ask anything about your sales data..."
+        )
+
+        if question:
+
+            # Display user message
+            st.session_state.chat_history.append({
+                "role": "user",
+                "content": question
+            })
+
+            with st.chat_message("user"):
+                st.markdown(question)
+
+            # ==================================
+            # GROQ API CONNECTION
+            # ==================================
+
+            try:
+
+                api_key = st.secrets["GROQ_API_KEY"]
+
+                client = Groq(api_key=api_key)
+
+                system_prompt = f"""
+                You are Smart AI, an intelligent sales analytics assistant.
+
+                Answer questions using the supplied sales dataset.
+
+                IMPORTANT RULES:
+
+                1. Use the dataset information provided below.
+                2. Do not invent revenue, profit, orders or quantities.
+                3. If information is unavailable, clearly say so.
+                4. Explain answers in simple English.
+                5. Use bullet points when useful.
+                6. Provide business recommendations when requested.
+                7. Format currency using Indian Rupees (₹).
+
+                DATASET INFORMATION:
+
+                {data_context}
+                """
+
+                messages = [
+                    {
+                        "role": "system",
+                        "content": system_prompt
+                    }
+                ]
+
+                # Include recent conversation
+                messages.extend(
+                    st.session_state.chat_history[-10:]
+                )
+
+                with st.chat_message("assistant"):
+
+                    with st.spinner("AI is analyzing your sales data..."):
+
+                        response = client.chat.completions.create(
+                            model="llama-3.3-70b-versatile",
+                            messages=messages,
+                            temperature=0.3,
+                            max_completion_tokens=1000
+                        )
+
+                        answer = response.choices[0].message.content
+
+                        st.markdown(answer)
+
+                # Save assistant response
+                st.session_state.chat_history.append({
+                    "role": "assistant",
+                    "content": answer
+                })
+
+            except Exception as e:
+
+                st.error(
+                    f"AI Assistant Error: {str(e)}"
+                )
 
 # Business Insights
 elif page == "Business Insights":
