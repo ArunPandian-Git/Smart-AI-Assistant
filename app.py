@@ -320,13 +320,19 @@ page_options = {
     "📁  Data Explorer": "Data Explorer"
 }
 
-selected_page = st.sidebar.radio(
-    "Navigate",
-    list(page_options.keys()),
-    label_visibility="collapsed"
+page = st.sidebar.radio(
+    "Navigation",
+    [
+        "Dashboard",
+        "Sales Analytics",
+        "Product Analysis",
+        "Regional Analysis",
+        "Sales Prediction",
+        "AI Assistant",
+        "Business Insights",
+        "Data Explorer"
+    ]
 )
-
-page = page_options[selected_page]
 
 
 # ==========================================
