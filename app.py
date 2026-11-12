@@ -1500,222 +1500,154 @@ elif page == "Regional Analysis":
             )
 
         st.divider()
-# ==========================================
-# PREMIUM REGIONAL ANALYSIS
-# ==========================================
+        # ==========================================
+        # PREMIUM REGIONAL INTELLIGENCE
+        # ==========================================
 
-st.markdown("## 🌍 Regional Intelligence")
-st.caption("Analyze revenue, profitability and business performance across regions.")
+        st.markdown("## 🌍 Regional Intelligence")
 
-# Sort regional data
-region_summary = region_summary.sort_values(
-    by="Revenue",
-    ascending=False
-)
+        st.caption(
+            "Analyze revenue, profitability and business performance across regions."
+        )
 
-# ==========================================
-# 1. REGIONAL KPI CARDS
-# ==========================================
+        # Regional KPI calculations
+        total_revenue = region_summary["Revenue"].sum()
+        total_profit = region_summary["Profit"].sum()
+        total_regions = region_summary["Region"].nunique()
 
-total_revenue = region_summary["Revenue"].sum()
-total_profit = region_summary["Profit"].sum()
-total_regions = region_summary["Region"].nunique()
+        top_region = region_summary.iloc[0]["Region"]
+        top_region_revenue = region_summary.iloc[0]["Revenue"]
 
-top_region = region_summary.iloc[0]["Region"]
-top_region_revenue = region_summary.iloc[0]["Revenue"]
+        profit_margin = (
+            total_profit / total_revenue * 100
+            if total_revenue > 0 else 0
+        )
 
-profit_margin = (
-    (total_profit / total_revenue) * 100
-    if total_revenue > 0 else 0
-)
+        # KPI cards
+        col1, col2, col3, col4 = st.columns(4)
 
-col1, col2, col3, col4 = st.columns(4)
+        with col1:
+            st.metric("🌍 Total Regions", total_regions)
 
-with col1:
-    st.metric(
-        "🌍 Total Regions",
-        total_regions
-    )
+        with col2:
+            st.metric("💰 Total Revenue", f"₹{total_revenue:,.0f}")
 
-with col2:
-    st.metric(
-        "💰 Total Revenue",
-        f"₹{total_revenue:,.0f}"
-    )
+        with col3:
+            st.metric("📈 Total Profit", f"₹{total_profit:,.0f}")
 
-with col3:
-    st.metric(
-        "📈 Total Profit",
-        f"₹{total_profit:,.0f}"
-    )
+        with col4:
+            st.metric("🏆 Profit Margin", f"{profit_margin:.2f}%")
 
-with col4:
-    st.metric(
-        "🏆 Profit Margin",
-        f"{profit_margin:.2f}%"
-    )
+        st.divider()
 
-st.markdown("---")
+        # Revenue comparison
+        st.subheader("📊 Regional Revenue Performance")
 
-# ==========================================
-# 2. REVENUE BY REGION
-# ==========================================
+        fig_region = px.bar(
+            region_summary,
+            x="Region",
+            y="Revenue",
+            color="Revenue",
+            text_auto=".2s",
+            title="Revenue Comparison Across Regions",
+            color_continuous_scale="Purples"
+        )
 
-st.subheader("📊 Regional Revenue Performance")
+        fig_region.update_layout(
+            template="plotly_dark",
+            height=420,
+            showlegend=False
+        )
 
-fig_region = px.bar(
-    region_summary,
-    x="Region",
-    y="Revenue",
-    color="Revenue",
-    text_auto=".2s",
-    title="Revenue Comparison Across Regions",
-    color_continuous_scale="Purples",
-    template="plotly_dark"
-)
+        st.plotly_chart(
+            fig_region,
+            use_container_width=True
+        )
 
-fig_region.update_traces(
-    marker_line_width=1,
-    textposition="outside"
-)
+        # Profit distribution
+        st.subheader("💎 Regional Profit Distribution")
 
-fig_region.update_layout(
-    height=450,
-    showlegend=False,
-    title_x=0.02,
-    xaxis_title="Business Region",
-    yaxis_title="Total Revenue",
-    coloraxis_showscale=False,
-    margin=dict(l=20, r=20, t=60, b=20)
-)
+        col1, col2 = st.columns([1.5, 1])
 
-st.plotly_chart(
-    fig_region,
-    use_container_width=True
-)
+        with col1:
 
-# ==========================================
-# 3. PROFIT CONTRIBUTION
-# ==========================================
+            fig_region_profit = px.pie(
+                region_summary,
+                names="Region",
+                values="Profit",
+                hole=0.6,
+                title="Profit Contribution by Region"
+            )
 
-st.subheader("💎 Regional Profit Distribution")
+            fig_region_profit.update_layout(
+                template="plotly_dark",
+                height=420
+            )
 
-col1, col2 = st.columns([1.5, 1])
+            st.plotly_chart(
+                fig_region_profit,
+                use_container_width=True
+            )
 
-with col1:
+        with col2:
 
-    fig_region_profit = px.pie(
-        region_summary,
-        names="Region",
-        values="Profit",
-        hole=0.6,
-        title="Profit Contribution by Region",
-        template="plotly_dark",
-        color_discrete_sequence=px.colors.sequential.Purples
-    )
+            st.markdown("### 🏆 Top Performing Region")
 
-    fig_region_profit.update_traces(
-        textposition="inside",
-        textinfo="percent+label",
-        hole=0.6
-    )
+            st.markdown(
+                f"""
+                <div style="
+                    background:linear-gradient(135deg,#30204b,#514078);
+                    padding:25px;
+                    border-radius:18px;
+                    border:1px solid #8170b5;
+                ">
+                    <p style="color:#c9b9ff;">BEST REGION</p>
+                    <h2 style="color:white;">🌍 {top_region}</h2>
+                    <h3 style="color:#b8a4ff;">
+                        ₹{top_region_revenue:,.2f}
+                    </h3>
+                    <p style="color:#ddd;">
+                        Highest revenue-generating region.
+                    </p>
+                </div>
+                """,
+                unsafe_allow_html=True
+            )
 
-    fig_region_profit.update_layout(
-        height=420,
-        title_x=0.02,
-        margin=dict(l=20, r=20, t=60, b=20)
-    )
+        # Regional performance table
+        st.divider()
 
-    st.plotly_chart(
-        fig_region_profit,
-        use_container_width=True
-    )
+        st.subheader("📋 Regional Performance Report")
 
-with col2:
+        st.dataframe(
+            region_summary,
+            use_container_width=True,
+            hide_index=True
+        )
 
-    st.markdown("### 🏆 Top Performing Region")
+        # Business insights
+        st.divider()
 
-    st.markdown(
-        f"""
-        <div style="
-            background:linear-gradient(135deg,#30204b,#514078);
-            padding:25px;
-            border-radius:18px;
-            border:1px solid #8170b5;
-            margin-top:15px;
-        ">
-            <p style="color:#c9b9ff;font-size:14px;">
-                BEST REGION
-            </p>
-            <h2 style="color:white;">🌍 {top_region}</h2>
-            <h3 style="color:#b8a4ff;">
-                ₹{top_region_revenue:,.2f}
-            </h3>
-            <p style="color:#ddd;">
-                Highest revenue-generating region.
-            </p>
-        </div>
-        """,
-        unsafe_allow_html=True
-    )
+        st.subheader("💡 Regional Business Insights")
 
-    st.markdown("<br>", unsafe_allow_html=True)
+        st.success(
+            f"""
+            🏆 **Best Performing Region**
 
-    st.metric(
-        "Overall Profit Margin",
-        f"{profit_margin:.2f}%"
-    )
+            {top_region} generates the highest revenue:
+            ₹{top_region_revenue:,.2f}
+            """
+        )
 
-# ==========================================
-# 4. REGIONAL PERFORMANCE REPORT
-# ==========================================
+        st.info(
+            f"""
+            📊 **Business Overview**
 
-st.markdown("---")
+            Your business operates across {total_regions} regions.
 
-st.subheader("📋 Regional Performance Report")
-
-display_region = region_summary.copy()
-
-display_region["Revenue"] = display_region["Revenue"].round(2)
-display_region["Profit"] = display_region["Profit"].round(2)
-
-st.dataframe(
-    display_region,
-    use_container_width=True,
-    hide_index=True
-)
-
-# ==========================================
-# 5. BUSINESS INSIGHTS
-# ==========================================
-
-st.markdown("---")
-
-st.subheader("💡 Regional Business Insights")
-
-insight_col1, insight_col2 = st.columns(2)
-
-with insight_col1:
-
-    st.success(
-        f"""
-        🏆 **Best Performing Region**
-
-        {top_region} generates the highest revenue
-        with ₹{top_region_revenue:,.2f}.
-        """
-    )
-
-with insight_col2:
-
-    st.info(
-        f"""
-        📊 **Business Overview**
-
-        Your business operates across {total_regions} regions
-        with an overall profit margin of {profit_margin:.2f}%.
-        """
-    )
+            Overall profit margin: {profit_margin:.2f}%
+            """
+        )
 
 # ==========================================
 # STAGE 5 - MACHINE LEARNING SALES PREDICTION
