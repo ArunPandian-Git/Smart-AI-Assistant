@@ -162,42 +162,7 @@ h1, h2, h3 {
 </style>
 """, unsafe_allow_html=True)
 
-# =====================================
-# PREMIUM SIDEBAR BRANDING
-# =====================================
 
-st.sidebar.markdown("""
-<div style="
-    padding:20px 10px;
-    margin-bottom:20px;
-    background:linear-gradient(135deg,#302744,#211c2b);
-    border:1px solid #51416b;
-    border-radius:15px;
-">
-
-    <div style="font-size:25px;font-weight:800;color:#9995ff;">
-        🤖 SMART AI
-    </div>
-
-    <div style="
-        font-size:11px;
-        color:#c7bfd8;
-        margin-top:8px;
-        letter-spacing:1px;
-    ">
-        SALES INTELLIGENCE PLATFORM
-    </div>
-
-    <div style="
-        font-size:10px;
-        color:#8e83aa;
-        margin-top:12px;
-    ">
-        PREMIUM ANALYTICS WORKSPACE
-    </div>
-
-</div>
-""", unsafe_allow_html=True)
 # ==========================================
 # PREMIUM APPLICATION HERO SECTION
 # ==========================================
