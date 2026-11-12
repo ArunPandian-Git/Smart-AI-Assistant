@@ -31,6 +31,7 @@ st.set_page_config(
     }
 )
 
+
 # =====================================
 # CUSTOM DASHBOARD THEME
 # =====================================
@@ -38,7 +39,6 @@ st.set_page_config(
 st.markdown("""
 <style>
 
-/* Main background */
 .stApp {
     background: linear-gradient(
         135deg,
@@ -46,115 +46,56 @@ st.markdown("""
         #30204b,
         #21152f
     );
-    color: #ffffff;
+    color: white;
 }
 
-/* Main content spacing */
 .block-container {
     padding-top: 1.5rem;
     padding-bottom: 2rem;
 }
 
-/* Sidebar */
 [data-testid="stSidebar"] {
     background-color: #15121b;
     border-right: 1px solid #30283c;
 }
 
-# ==========================================
-# PREMIUM APPLICATION HERO SECTION
-# ==========================================
-
-st.markdown("""
-<style>
-
-st.markdown("""
-<style>
-
-body {
-    background: linear-gradient(
-        120deg,
-        #667eea,
-        #764ba2
-    );
-}
-
-</style>
-""", unsafe_allow_html=True)
-
-    padding: 35px 35px;
+.hero-container {
+    padding: 35px;
     border-radius: 20px;
     border: 1px solid #594477;
     margin-bottom: 25px;
-
-    box-shadow: 0 8px 30px rgba(0,0,0,0.25);
+    background: linear-gradient(
+        120deg,
+        #30204b,
+        #21152f
+    );
 }
 
 .hero-title {
     font-size: 42px;
     font-weight: 850;
-    letter-spacing: -1px;
-
-    background: linear-gradient(
-        90deg,
-        #ffffff,
-        #b9a5ff,
-        #8f83ff
-    );
-
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-
-    margin-bottom: 8px;
+    color: #b9a5ff;
 }
 
 .hero-subtitle {
     color: #d1c5e7;
     font-size: 16px;
-    margin-top: 5px;
 }
 
 .hero-badge {
     display: inline-block;
-    background: rgba(137,133,255,0.15);
     color: #b9a5ff;
-    border: 1px solid #7665c9;
-    border-radius: 30px;
     padding: 7px 15px;
-    font-size: 11px;
-    font-weight: bold;
-    letter-spacing: 1px;
-    margin-top: 15px;
+    border-radius: 30px;
+    border: 1px solid #7665c9;
 }
 
 .hero-description {
     color: #aaa0bd;
     font-size: 13px;
-    margin-top: 15px;
 }
 
 </style>
-
-<div class="hero-container">
-
-    <div class="hero-title">
-        🤖 Smart AI Assistant
-    </div>
-
-    <div class="hero-subtitle">
-        Intelligent Sales Analytics & Prediction Platform
-    </div>
-
-    <div class="hero-badge">
-        ✦ AI POWERED BUSINESS INTELLIGENCE
-    </div>
-
-    <div class="hero-description">
-        Transform your sales data into actionable business insights
-        with Machine Learning, Advanced Analytics and Generative AI.
-    </div>
-
-</div>
 """, unsafe_allow_html=True)
 
 
