@@ -1776,15 +1776,412 @@ elif page == "AI Assistant":
                     f"AI Assistant Error: {str(e)}"
                 )
 
-# Business Insights
+# ==========================================
+# STAGE 7 - PREMIUM BUSINESS INSIGHTS
+# ==========================================
+
 elif page == "Business Insights":
 
-    st.header("💡 Business Insights")
+    st.header("💡 Business Intelligence Center")
 
-    st.info(
-        "Automated business recommendations will be implemented in Stage 7."
-    )
+    st.markdown("""
+    Discover business performance, identify opportunities,
+    and receive actionable recommendations from your sales data.
+    """)
 
+    st.divider()
+
+    if filtered_df.empty:
+
+        st.warning("No sales data available. Please change your filters.")
+
+    else:
+
+        # ----------------------------------
+        # 1. PREPARE DATA
+        # ----------------------------------
+
+        insight_df = filtered_df.copy()
+
+        insight_df["Date"] = pd.to_datetime(
+            insight_df["Date"],
+            errors="coerce"
+        )
+
+        for col in ["Revenue", "Profit", "Quantity"]:
+            insight_df[col] = pd.to_numeric(
+                insight_df[col],
+                errors="coerce"
+            ).fillna(0)
+
+        insight_df = insight_df.dropna(subset=["Date"])
+
+        if insight_df.empty:
+
+            st.warning("No valid sales dates found.")
+
+        else:
+
+            total_revenue = insight_df["Revenue"].sum()
+            total_profit = insight_df["Profit"].sum()
+            total_orders = insight_df["Order_ID"].nunique()
+            total_quantity = insight_df["Quantity"].sum()
+
+            profit_margin = (
+                (total_profit / total_revenue) * 100
+                if total_revenue != 0 else 0
+            )
+
+            # ----------------------------------
+            # 2. BUSINESS PERFORMANCE KPIs
+            # ----------------------------------
+
+            st.subheader("📊 Business Performance Overview")
+
+            c1, c2, c3, c4 = st.columns(4)
+
+            c1.metric(
+                "Total Revenue",
+                f"₹{total_revenue:,.0f}"
+            )
+
+            c2.metric(
+                "Total Profit",
+                f"₹{total_profit:,.0f}"
+            )
+
+            c3.metric(
+                "Total Orders",
+                f"{total_orders:,}"
+            )
+
+            c4.metric(
+                "Profit Margin",
+                f"{profit_margin:.2f}%"
+            )
+
+            st.divider()
+
+            # ----------------------------------
+            # 3. SALES TREND ANALYSIS
+            # ----------------------------------
+
+            st.subheader("📈 Sales Trend Analysis")
+
+            daily_sales = (
+                insight_df.groupby("Date")["Revenue"]
+                .sum()
+                .reset_index()
+                .sort_values("Date")
+            )
+
+            if len(daily_sales) >= 2:
+
+                first_sales = daily_sales["Revenue"].iloc[0]
+                last_sales = daily_sales["Revenue"].iloc[-1]
+
+                if first_sales != 0:
+
+                    growth = (
+                        (last_sales - first_sales) / first_sales
+                    ) * 100
+
+                else:
+                    growth = 0
+
+                if growth > 0:
+
+                    st.success(
+                        f"📈 Sales increased by {growth:.2f}% "
+                        "between the first and last recorded sales dates."
+                    )
+
+                elif growth < 0:
+
+                    st.warning(
+                        f"📉 Sales decreased by {abs(growth):.2f}% "
+                        "between the first and last recorded sales dates."
+                    )
+
+                else:
+
+                    st.info("Sales remained stable between the selected dates.")
+
+            else:
+
+                st.info("Add more sales dates to analyze sales growth.")
+
+            fig_trend = px.line(
+                daily_sales,
+                x="Date",
+                y="Revenue",
+                markers=True,
+                title="Daily Revenue Trend",
+                template="plotly_dark"
+            )
+
+            fig_trend.update_layout(
+                paper_bgcolor="rgba(0,0,0,0)",
+                plot_bgcolor="rgba(0,0,0,0)"
+            )
+
+            st.plotly_chart(
+                fig_trend,
+                use_container_width=True
+            )
+
+            st.divider()
+
+            # ----------------------------------
+            # 4. PRODUCT PERFORMANCE
+            # ----------------------------------
+
+            st.subheader("🏆 Product Performance Insights")
+
+            product_summary = (
+                insight_df.groupby("Product")
+                .agg(
+                    Revenue=("Revenue", "sum"),
+                    Profit=("Profit", "sum"),
+                    Quantity=("Quantity", "sum")
+                )
+                .reset_index()
+                .sort_values("Revenue", ascending=False)
+            )
+
+            if not product_summary.empty:
+
+                best_product = product_summary.iloc[0]
+
+                st.success(
+                    f"🏆 Top Product: {best_product['Product']} "
+                    f"with ₹{best_product['Revenue']:,.0f} revenue."
+                )
+
+                fig_product = px.bar(
+                    product_summary,
+                    x="Product",
+                    y="Revenue",
+                    color="Profit",
+                    title="Product Revenue Performance",
+                    template="plotly_dark",
+                    text_auto=True
+                )
+
+                fig_product.update_layout(
+                    paper_bgcolor="rgba(0,0,0,0)",
+                    plot_bgcolor="rgba(0,0,0,0)"
+                )
+
+                st.plotly_chart(
+                    fig_product,
+                    use_container_width=True
+                )
+
+            st.divider()
+
+            # ----------------------------------
+            # 5. REGIONAL PERFORMANCE
+            # ----------------------------------
+
+            st.subheader("🌍 Regional Business Insights")
+
+            region_summary = (
+                insight_df.groupby("Region")
+                .agg(
+                    Revenue=("Revenue", "sum"),
+                    Profit=("Profit", "sum")
+                )
+                .reset_index()
+                .sort_values("Revenue", ascending=False)
+            )
+
+            if not region_summary.empty:
+
+                best_region = region_summary.iloc[0]
+
+                st.success(
+                    f"🌍 Highest Revenue Region: {best_region['Region']} "
+                    f"with ₹{best_region['Revenue']:,.0f} revenue."
+                )
+
+                fig_region = px.pie(
+                    region_summary,
+                    names="Region",
+                    values="Revenue",
+                    hole=0.55,
+                    title="Revenue Contribution by Region",
+                    template="plotly_dark"
+                )
+
+                st.plotly_chart(
+                    fig_region,
+                    use_container_width=True
+                )
+
+            st.divider()
+
+            # ----------------------------------
+            # 6. AUTOMATED BUSINESS RECOMMENDATIONS
+            # ----------------------------------
+
+            st.subheader("🚀 Smart Business Recommendations")
+
+            recommendations = []
+
+            # Revenue recommendation
+
+            if total_revenue > 0:
+
+                recommendations.append(
+                    "💰 Revenue: Continue monitoring revenue trends "
+                    "and focus on products generating the highest sales."
+                )
+
+            else:
+
+                recommendations.append(
+                    "⚠️ Revenue: No revenue recorded. Review your "
+                    "sales transactions and dataset."
+                )
+
+            # Profit recommendation
+
+            if profit_margin < 10:
+
+                recommendations.append(
+                    "⚠️ Profitability: Profit margin is below 10%. "
+                    "Review operating costs, discounts and product pricing."
+                )
+
+            elif profit_margin >= 20:
+
+                recommendations.append(
+                    "✅ Profitability: Your profit margin is healthy. "
+                    "Continue monitoring costs and pricing."
+                )
+
+            else:
+
+                recommendations.append(
+                    "📊 Profitability: Monitor your profit margin "
+                    "and look for opportunities to improve it."
+                )
+
+            # Product recommendation
+
+            if not product_summary.empty:
+
+                low_profit_products = product_summary[
+                    product_summary["Profit"] <= 0
+                ]
+
+                if not low_profit_products.empty:
+
+                    products = ", ".join(
+                        low_profit_products["Product"].astype(str).tolist()
+                    )
+
+                    recommendations.append(
+                        f"📦 Product Alert: Review these products with "
+                        f"zero or negative profit: {products}."
+                    )
+
+                else:
+
+                    recommendations.append(
+                        "📦 Product Strategy: Review your top-selling "
+                        "products and maintain sufficient inventory."
+                    )
+
+            # Regional recommendation
+
+            if len(region_summary) >= 2:
+
+                weakest_region = region_summary.iloc[-1]
+
+                recommendations.append(
+                    f"🌍 Regional Opportunity: {weakest_region['Region']} "
+                    "has the lowest revenue among the selected regions. "
+                    "Investigate customer demand and marketing opportunities."
+                )
+
+            # Quantity recommendation
+
+            if total_quantity > 0 and total_orders > 0:
+
+                avg_quantity = total_quantity / total_orders
+
+                recommendations.append(
+                    f"🛒 Order Analysis: Average quantity per order is "
+                    f"{avg_quantity:.2f}. Explore product bundles "
+                    "and cross-selling opportunities."
+                )
+
+            for i, recommendation in enumerate(recommendations, 1):
+
+                st.markdown(
+                    f"""
+                    <div style="
+                        background: linear-gradient(135deg, #302744, #241e32);
+                        padding: 18px;
+                        border-radius: 12px;
+                        border: 1px solid #51416b;
+                        margin-bottom: 12px;
+                    ">
+                        <h4 style="color:#b9a5ff;">
+                            Recommendation {i}
+                        </h4>
+                        <p style="color:white;">
+                            {recommendation}
+                        </p>
+                    </div>
+                    """,
+                    unsafe_allow_html=True
+                )
+
+            st.divider()
+
+            # ----------------------------------
+            # 7. DOWNLOAD BUSINESS REPORT
+            # ----------------------------------
+
+            st.subheader("📥 Export Business Insights")
+
+            report = f"""
+SMART AI ASSISTANT
+BUSINESS INSIGHTS REPORT
+
+BUSINESS PERFORMANCE
+--------------------
+Total Revenue: Rs. {total_revenue:,.2f}
+Total Profit: Rs. {total_profit:,.2f}
+Total Orders: {total_orders}
+Total Quantity Sold: {total_quantity}
+Profit Margin: {profit_margin:.2f}%
+
+TOP PRODUCT
+-----------
+{best_product['Product'] if not product_summary.empty else 'Not available'}
+
+TOP REGION
+----------
+{best_region['Region'] if not region_summary.empty else 'Not available'}
+
+BUSINESS RECOMMENDATIONS
+------------------------
+""" + "\n".join(
+                f"{i}. {item}"
+                for i, item in enumerate(recommendations, 1)
+            )
+
+            st.download_button(
+                label="📥 Download Business Insights Report",
+                data=report,
+                file_name="business_insights_report.txt",
+                mime="text/plain",
+                use_container_width=True
+            )
 
 # Data Explorer
 elif page == "Data Explorer":
