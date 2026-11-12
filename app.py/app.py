@@ -418,4 +418,4 @@ st.markdown(
     'SMART AI ASSISTANT · SALES INTELLIGENCE PLATFORM · Built with Streamlit, Python, Plotly, Scikit-learn & Groq'
     '</div>',
     unsafe_allow_html=True,
-)
+).
