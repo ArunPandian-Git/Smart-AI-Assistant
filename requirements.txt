@@ -9,3 +9,8 @@ openpyxl
 joblib
 groq
 python-dotenv
+pyarrow
+pypdf
+python-docx
+PyYAML
+lxml
