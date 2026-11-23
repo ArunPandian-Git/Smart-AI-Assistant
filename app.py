@@ -378,7 +378,7 @@ elif page == "AI Intelligence Studio":
                         )}]
                         history += [{"role": m["role"], "content": m["content"]} for m in st.session_state.smart_ai_chat[-8:]]
                         answer = client.chat.completions.create(
-                            model="llama-3.3-70b-versatile", messages=history,
+                            model="openai/gpt-oss-120b", messages=history,
                             temperature=0.25, max_tokens=1200
                         ).choices[0].message.content
                     except Exception as exc:
