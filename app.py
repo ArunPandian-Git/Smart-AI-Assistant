@@ -342,7 +342,7 @@ elif page=="AI Intelligence Studio":
                              "sample_records":filtered.head(12).replace({np.nan:None}).to_dict(orient="records")}
                     client=Groq(api_key=key)
                     response=client.chat.completions.create(
-                        model="llama-3.3-70b-versatile",
+                        model="gpt-6.2-sol",
                         messages=[
                             {"role":"system","content":"You are a careful business data analyst. Answer only from supplied dataset context. State assumptions and limitations. Do not invent missing values. Clearly distinguish observed facts from estimates."},
                             {"role":"user","content":"Dataset context:\n"+json.dumps(summary,default=str)+"\n\nQuestion: "+question}
