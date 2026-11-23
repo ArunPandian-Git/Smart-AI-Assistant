@@ -241,7 +241,7 @@ def normalize_products(frame):
     return df
 
 def load_local_folder():
-    root = Path("datasets")
+    root = Path(__file__).resolve().parent / "datasets"
     frames, notes = [], []
     if not root.exists():
         return None, []
@@ -340,8 +340,6 @@ with st.sidebar:
     st.caption("Add GROQ_API_KEY in Streamlit Secrets to enable AI chat.")
     st.markdown("[Project repository](https://github.com/ArunPandian-Git/Smart-AI-Assistant)")
     st.divider()
-    st.markdown("### 📁 Local dataset folders")
-    st.code("\n".join([f"datasets/{folder}/" for folder in FORMAT_FOLDERS]), language="text")
 
 # --------------------------- DATA INGESTION ---------------------------
 raw_frames, load_messages = [], []
