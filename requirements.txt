@@ -3,14 +3,11 @@ pandas
 numpy
 plotly
 scikit-learn
-matplotlib
-seaborn
 openpyxl
-joblib
-groq
-python-dotenv
+xlrd
 pyarrow
 pypdf
 python-docx
 PyYAML
 lxml
+groq
